@@ -198,6 +198,12 @@ select.inp{appearance:none;}
 .cal-day.has-act{background:rgba(0,245,196,.12);color:var(--accent);}
 .cal-day.other{opacity:.3;}
 </style>
+  <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22QUANT+OS%22%2C%22short_name%22%3A%22Quant%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23050810%22%2C%22theme_color%22%3A%22%230a0d1a%22%2C%22start_url%22%3A%22.%2F%22%7D">
+  <meta name="theme-color" content="#050810">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="QUANT OS">
+  <meta name="mobile-web-app-capable" content="yes">
 </head>
 <body>
 
@@ -206,6 +212,8 @@ select.inp{appearance:none;}
   <div class="nav-top">
     <div class="logo">QUANT OS</div>
     <div class="nav-badges">
+      <div id="online-badge" class="badge green" style="display:none;">☁ Online</div>
+      <div id="offline-badge" class="badge" style="display:none;border-color:var(--accent2);color:var(--accent2);">📴 Offline</div>
       <div class="badge" id="live-date-badge"></div>
       <div class="badge green" id="day-badge"></div>
       <button class="btn sm" onclick="document.getElementById('sync-modal').style.display='flex'" style="font-size:9px;padding:4px 10px;border-color:var(--accent3);color:var(--accent3);">☁ Sync</button>
@@ -214,13 +222,13 @@ select.inp{appearance:none;}
   </div>
   <div class="tabs">
     <button class="tab active" onclick="goTab('daily',this)">Daily</button>
+    <button class="tab" onclick="goTab('calendar',this)">📅 Calendar</button>
     <button class="tab" onclick="goTab('tracker',this)">Tracker</button>
     <button class="tab" onclick="goTab('gpa',this)">GPA</button>
     <button class="tab" onclick="goTab('timeline',this)">Timeline</button>
     <button class="tab" onclick="goTab('progress',this)">Progress</button>
     <button class="tab" onclick="goTab('books',this)">Books</button>
     <button class="tab" onclick="goTab('notes',this)">Notes</button>
-    <button class="tab" onclick="goTab('calendar',this)">📅 Calendar</button>
     <button class="tab" onclick="goTab('fitness',this)">💪 Fitness</button>
     <button class="tab" onclick="goTab('pr',this)">🏆 PRs</button>
     <button class="tab" onclick="goTab('wlog',this)">📋 Log</button>
@@ -746,7 +754,18 @@ const SK = 'qos_v2';
 let S = {};
 
 function load() {
-  try { S = JSON.parse(localStorage.getItem(SK)) || {}; } catch(e) { S = {}; }
+  try {
+    const raw = localStorage.getItem(SK);
+    S = raw ? JSON.parse(raw) : {};
+    // If main load gave empty object but backup exists, use backup
+    if (!Object.keys(S).length) {
+      const backup = localStorage.getItem(SK + '_backup');
+      if (backup) { S = JSON.parse(backup); console.log('Restored from backup'); }
+    }
+  } catch(e) {
+    console.warn('Main load failed, trying backup:', e);
+    try { S = JSON.parse(localStorage.getItem(SK + '_backup')) || {}; } catch(e2) { S = {}; }
+  }
   if (!S.nonneg) S.nonneg = [
     {id:'n1',label:'2x LeetCode (C++)',tag:'LC',tc:'tag-lc'},
     {id:'n2',label:'Zetamac 10 mins',tag:'HABIT',tc:'tag-habit'},
@@ -786,16 +805,71 @@ function load() {
   if (!S.cal_events) S.cal_events = {};
 }
 
-function save() {
+// After loading locally, try to pull fresh data from cloud
+async function syncOnStart() {
+  if (!SB_URL || !SB_KEY) return;
   try {
-    localStorage.setItem(SK, JSON.stringify(S));
-  } catch(e) {}
+    const res = await fetch(SB_URL + '/rest/v1/sync_data?id=eq.quantos_main&select=data,updated_at', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (!res.ok) return;
+    const rows = await res.json();
+    if (!rows.length || !rows[0].data) return;
+    const cloudData = rows[0].data;
+    const cloudTime = new Date(rows[0].updated_at).getTime();
+    const localTime = parseInt(localStorage.getItem(SK + '_ts') || '0');
+    // Use whichever is newer
+    if (cloudTime > localTime) {
+      S = { ...S, ...cloudData };
+      try { localStorage.setItem(SK, JSON.stringify(S)); } catch(e) {}
+      localStorage.setItem(SK + '_ts', cloudTime);
+      // Re-render current tab
+      const activeTab = document.querySelector('.tab.active');
+      if (activeTab) activeTab.click();
+      showSyncBadge('☁ Synced from cloud');
+    }
+  } catch(e) { console.warn('Cloud pull on start failed:', e); }
+}
 
-  updateOverall();
-
-  if (SB_URL && SB_KEY) {
-    pushToSupabase();
+function showSyncBadge(msg) {
+  let badge = document.getElementById('sync-badge');
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.id = 'sync-badge';
+    badge.style.cssText = 'position:fixed;bottom:16px;right:16px;background:var(--card);border:1px solid var(--accent);color:var(--accent);font-family:"Space Mono",monospace;font-size:10px;padding:8px 14px;z-index:999;transition:opacity .5s;letter-spacing:1px;';
+    document.body.appendChild(badge);
   }
+  badge.textContent = msg;
+  badge.style.opacity = '1';
+  setTimeout(() => { badge.style.opacity = '0'; }, 3000);
+}
+
+function save() {
+  // 1. Always save to localStorage first (instant, works offline)
+  try {
+    const serialized = JSON.stringify(S);
+    localStorage.setItem(SK, serialized);
+    localStorage.setItem(SK + '_backup', serialized); // double backup
+    localStorage.setItem(SK + '_ts', Date.now());
+  } catch(e) {
+    console.warn('localStorage save failed:', e);
+    // If localStorage is full, try to clear old keys
+    try {
+      const keys = Object.keys(localStorage).filter(k => !k.startsWith('qos') && !k.startsWith('sb_'));
+      keys.forEach(k => localStorage.removeItem(k));
+      localStorage.setItem(SK, JSON.stringify(S));
+    } catch(e2) { console.error('Storage completely failed:', e2); }
+  }
+  updateOverall();
+  // 2. Push to Supabase cloud in background (non-blocking, won't affect local save)
+  if (SB_URL && SB_KEY && navigator.onLine) {
+    pushToSupabase().catch(e => console.warn('Cloud sync failed silently:', e));
+  }
+}
+
+function tk() {
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 }
 
 // ══════════════════════════════════════════════
@@ -863,10 +937,11 @@ function renderHeader() {
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   document.getElementById('live-date-badge').textContent = days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
-  const start = new Date('2026-05-26'); start.setHours(0,0,0,0);
+  const start = new Date('2026-06-03'); start.setHours(0,0,0,0);
   const today = new Date(); today.setHours(0,0,0,0);
   const diff = Math.floor((today - start) / 86400000);
-  document.getElementById('day-badge').textContent = diff < 0 ? 'STARTS TOMORROW' : diff === 0 ? 'DAY 1 — LET\'S GO' : 'DAY '+diff+' OF GRIND';
+  const badge = diff < 0 ? 'STARTS '+Math.abs(diff)+' DAYS' : diff === 0 ? 'DAY 1 — LET\'S GO 🔥' : 'DAY '+diff+' OF GRIND';
+  document.getElementById('day-badge').textContent = badge;
 }
 
 // ══════════════════════════════════════════════
@@ -1715,7 +1790,7 @@ function renderFitness() {
   const mg = document.getElementById('month-goals-grid');
   mg.innerHTML = '';
   const now = new Date();
-  const startDate = new Date('2026-05-26');
+  const startDate = new Date('2026-06-03');
   const monthsIn = Math.max(0, Math.floor((now - startDate) / (30.44 * 86400000)));
 
   MONTH_GOALS.forEach((m, i) => {
@@ -2474,9 +2549,12 @@ function openCalTab() {
 // ══════════════════════════════════════════════
 // SUPABASE SYNC
 // ══════════════════════════════════════════════
-let SB_URL = 'https://fubaubgowhszbcpdyiht.supabase.co';
-let SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1YmF1Ymdvd2hzemJjcGR5aWh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMDM5MzUsImV4cCI6MjA5NTg3OTkzNX0.Qo9VIvn6zbkOSj9CsOKDS88x1otp6whMZtdxS57FJvo';
-let SB_DEVICE = 'default';
+// Supabase config — hardcoded as default, overridable via settings
+const SB_URL_DEFAULT = 'https://fubaubgowhszbcpdyiht.supabase.co';
+const SB_KEY_DEFAULT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1YmF1Ymdvd2hzemJjcGR5aWh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMDM5MzUsImV4cCI6MjA5NTg3OTkzNX0.Qo9VIvn6zbkOSj9CsOKDS88x1otp6whMZtdxS57FJvo';
+let SB_URL = localStorage.getItem('sb_url') || SB_URL_DEFAULT;
+let SB_KEY = localStorage.getItem('sb_key') || SB_KEY_DEFAULT;
+let SB_DEVICE = localStorage.getItem('sb_device') || 'pakshit';
 
 function loadSBConfig() {
   const pushBtn = document.getElementById('push-btn');
@@ -2500,8 +2578,7 @@ async function connectSupabase() {
   localStorage.setItem('sb_url', SB_URL);
   localStorage.setItem('sb_key', SB_KEY);
   localStorage.setItem('sb_device', SB_DEVICE);
-  document.getElementById('push-btn').disabled = false;
-  document.getElementById('pull-btn').disabled = false;
+  // Sync buttons always enabled
   syncLog('Connecting...');
   await pullFromSupabase();
 }
@@ -2510,6 +2587,7 @@ async function pushToSupabase() {
   if (!SB_URL || !SB_KEY) { syncLog('⚠ Not connected'); return; }
   syncLog('Pushing...');
   try {
+    localStorage.setItem(SK + '_ts', Date.now());
     const res = await fetch(SB_URL + '/rest/v1/sync_data', {
       method: 'POST',
       headers: {
@@ -2555,7 +2633,39 @@ function syncLog(msg) {
 }
 
 // Auto-push every 5 mins if configured
-setInterval(() => { if (SB_URL && SB_KEY) pushToSupabase(); }, 5 * 60 * 1000);
+// Auto-sync handled in INIT block below
+
+// ══════════════════════════════════════════════
+// BACKUP & RESTORE
+// ══════════════════════════════════════════════
+function exportLocal() {
+  const data = JSON.stringify(S, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'quantos_backup_' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  showSyncBadge('💾 Backup downloaded');
+}
+
+function importLocal(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      S = imported;
+      save();
+      const activeTab = document.querySelector('.tab.active');
+      if (activeTab) activeTab.click();
+      showSyncBadge('✓ Data restored from backup');
+    } catch(err) {
+      alert('Invalid backup file');
+    }
+  };
+  reader.readAsText(file);
+}
 
 // ══════════════════════════════════════════════
 // INIT
@@ -2565,6 +2675,11 @@ loadSBConfig();
 renderHeader();
 renderDaily();
 updateOverall();
+
+// Auto pull disabled to prevent cloud data
+// from overwriting newer local changes
+// setTimeout(()=>{pullFromSupabase();},1000);
+// setInterval(()=>{if(SB_URL&&SB_KEY) pullFromSupabase();},60000);
 // Wire modal backdrop after DOM is ready
 (function() {
   const m = document.getElementById('cal-modal');
@@ -2621,7 +2736,9 @@ setInterval(() => { renderHeader(); updateOverall(); }, 60000);
         );
       </div>
       5. Go to <b>Project Settings → API</b><br>
-      6. Copy your <b style="color:var(--accent);">Project URL</b> and <b style="color:var(--accent);">anon public key</b><br>
+      6. Go to <b style="color:var(--accent);">SQL Editor</b> and run:<br>
+      <code style="background:var(--surface);padding:4px 8px;font-size:10px;display:block;margin:6px 0;color:var(--accent3);">create table if not exists sync_data (id text primary key, data jsonb, updated_at timestamp default now()); insert into sync_data (id, data) values ('quantos_main', '{}') on conflict do nothing;</code>
+      7. Copy your <b style="color:var(--accent);">Project URL</b> and <b style="color:var(--accent);">anon public key</b><br>
       7. Paste them below and hit Connect
     </div>
 
@@ -2632,8 +2749,10 @@ setInterval(() => { renderHeader(); updateOverall(); }, 60000);
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <button class="btn primary" onclick="connectSupabase()" style="flex:1;">Connect & Sync</button>
-      <button class="btn" onclick="pushToSupabase()" style="flex:1;" id="push-btn" disabled>Push to Cloud</button>
-      <button class="btn" onclick="pullFromSupabase()" style="flex:1;" id="pull-btn" disabled>Pull from Cloud</button>
+      <button class="btn primary" onclick="pushToSupabase().then(()=>showSyncBadge('✓ Pushed to cloud'))" style="flex:1;">⬆ Push</button>
+      <button class="btn" onclick="pullFromSupabase().then(()=>showSyncBadge('✓ Pulled from cloud'))" style="flex:1;">⬇ Pull</button>
+      <button class="btn" onclick="exportLocal()" style="flex:1;">💾 Backup</button>
+      <label class="btn" style="flex:1;cursor:pointer;text-align:center;">📂 Restore<input type="file" accept=".json" onchange="importLocal(event)" style="display:none;"></label>
     </div>
     <div id="sync-log" style="margin-top:12px;font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;min-height:20px;"></div>
   </div>
