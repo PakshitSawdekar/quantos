@@ -2770,11 +2770,72 @@ function importLocal(event) {
   reader.readAsText(file);
 }
 
+
+// ══════════════════════════════════════════════
+// CONNECTION STATUS CHECK
+// ══════════════════════════════════════════════
+async function checkSBConnection() {
+  const dot = document.getElementById('sb-status-dot');
+  const label = document.getElementById('sb-status-label');
+  const sub = document.getElementById('sb-status-sub');
+  if (!dot) return;
+
+  // Yellow pulse while checking
+  dot.style.background = 'var(--yellow)';
+  dot.style.boxShadow = '0 0 6px var(--yellow)';
+  label.style.color = 'var(--yellow)';
+  label.textContent = 'CHECKING...';
+
+  if (!navigator.onLine) {
+    dot.style.background = 'var(--accent2)';
+    dot.style.boxShadow = '0 0 6px var(--accent2)';
+    label.style.color = 'var(--accent2)';
+    label.textContent = 'OFFLINE — NO INTERNET';
+    sub.textContent = 'Changes saved locally, will sync when back online';
+    return;
+  }
+
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/sync_data?id=eq.quantos_main&select=updated_at', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    if (res.ok) {
+      const rows = await res.json();
+      const lastSync = rows[0]?.updated_at
+        ? 'Last cloud save: ' + new Date(rows[0].updated_at).toLocaleString()
+        : 'Connected — no data pushed yet. Hit ⬆ Push.';
+      dot.style.background = 'var(--green)';
+      dot.style.boxShadow = '0 0 8px var(--green)';
+      label.style.color = 'var(--green)';
+      label.textContent = '● CONNECTED TO SUPABASE';
+      sub.textContent = lastSync;
+    } else {
+      throw new Error('HTTP ' + res.status);
+    }
+  } catch(e) {
+    dot.style.background = 'var(--red)';
+    dot.style.boxShadow = '0 0 6px var(--red)';
+    label.style.color = 'var(--red)';
+    label.textContent = '✗ CONNECTION FAILED';
+    sub.textContent = e.message || 'Could not reach Supabase';
+  }
+}
+
+// Auto-check whenever sync modal is opened
+document.addEventListener('DOMContentLoaded', function() {
+  const syncBtn = document.querySelector('button[onclick*=\'sync-modal\']');
+  if (syncBtn) {
+    const orig = syncBtn.getAttribute('onclick');
+    syncBtn.setAttribute('onclick', orig + '; setTimeout(checkSBConnection, 150);');
+  }
+});
+
 // ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
 load();
 loadSBConfig();
+setTimeout(checkSBConnection, 1200); // auto-check Supabase on load
 renderHeader();
 renderDaily();
 updateOverall();
@@ -3124,17 +3185,28 @@ renderMotivation();
 <!-- SYNC MODAL -->
 <div id="sync-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;">
   <div style="background:var(--card);border:1px solid var(--accent);padding:28px;max-width:540px;width:100%;margin:40px auto;position:relative;">
-    <button onclick="document.getElementById(&#39;sync-modal&#39;).style.display=&#39;none&#39;" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">×</button>
-    <div style="font-family:&#39;Space Mono&#39;,monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:4px;">CROSS-DEVICE SYNC</div>
-    <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:22px;font-weight:800;margin-bottom:16px;">Sync to all devices</div>
+    <button onclick="document.getElementById('sync-modal').style.display='none'" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">×</button>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:4px;">CROSS-DEVICE SYNC</div>
+    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:16px;">Sync to all devices</div>
+
+    <!-- CONNECTION STATUS BANNER -->
+    <div id="sb-connection-banner" style="display:flex;align-items:center;gap:12px;padding:12px 14px;margin-bottom:18px;border:1px solid var(--border);background:var(--surface);">
+      <div id="sb-status-dot" style="width:10px;height:10px;border-radius:50%;background:var(--muted2);flex-shrink:0;transition:background .4s;box-shadow:0 0 0 0 transparent;"></div>
+      <div style="flex:1;min-width:0;">
+        <div id="sb-status-label" style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--muted);">CHECKING CONNECTION...</div>
+        <div id="sb-status-sub" style="font-size:10px;color:var(--muted2);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">fubaubgowhszbcpdyiht.supabase.co</div>
+      </div>
+      <button onclick="checkSBConnection()" style="background:none;border:1px solid var(--border);color:var(--muted);font-family:'Space Mono',monospace;font-size:8px;padding:5px 10px;cursor:pointer;letter-spacing:1px;white-space:nowrap;transition:all .2s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">↺ RECHECK</button>
+    </div>
 
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn primary" onclick="pushToSupabase().then(()=&gt;showSyncBadge(&#39;✓ Pushed to cloud&#39;))" style="flex:1;">⬆ Push</button>
-      <button class="btn" onclick="pullFromSupabase().then(()=&gt;showSyncBadge(&#39;✓ Pulled from cloud&#39;))" style="flex:1;">⬇ Pull</button>
+      <button class="btn primary" onclick="pushToSupabase().then(()=>{showSyncBadge('✓ Pushed to cloud');checkSBConnection();})" style="flex:1;">⬆ Push</button>
+      <button class="btn" onclick="pullFromSupabase().then(()=>{showSyncBadge('✓ Pulled from cloud');checkSBConnection();})" style="flex:1;">⬇ Pull</button>
       <button class="btn" onclick="exportLocal()" style="flex:1;">💾 Backup</button>
       <label class="btn" style="flex:1;cursor:pointer;text-align:center;">📂 Restore<input type="file" accept=".json" onchange="importLocal(event)" style="display:none;"></label>
     </div>
-    <div id="sync-log" style="margin-top:12px;font-size:10px;color:var(--muted);font-family:&#39;Space Mono&#39;,monospace;min-height:20px;"></div>
+    <div id="sync-log" style="margin-top:12px;font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;min-height:20px;"></div>
+    <div id="sync-status-text" style="margin-top:4px;font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;"></div>
   </div>
 </div>
 
