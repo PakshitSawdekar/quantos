@@ -1,0 +1,2643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QUANT OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050810;--surface:#090d1a;--card:#0d1220;--border:#1a2240;--accent:#00f5c4;--accent2:#ff6b35;--accent3:#7b61ff;--text:#e8eaf0;--muted:#4a5270;--muted2:#2a3050;--green:#00f5c4;--red:#ff4060;--yellow:#ffd060;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,245,196,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,245,196,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+*{position:relative;z-index:1;}
+a{color:inherit;}
+button{cursor:pointer;font-family:'DM Mono',monospace;}
+
+/* NAV */
+.nav{background:rgba(5,8,16,.95);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 20px;display:flex;flex-direction:column;}
+.nav-top{display:flex;align-items:center;justify-content:space-between;padding:12px 0;flex-wrap:wrap;gap:8px;}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;letter-spacing:3px;color:var(--accent);}
+.nav-badges{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border:1px solid var(--border);}
+.badge.green{border-color:var(--accent);color:var(--accent);}
+.badge.purple{border-color:var(--accent3);color:var(--accent3);}
+.tabs{display:flex;gap:0;overflow-x:auto;padding-bottom:1px;}
+.tab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;padding:10px 16px;background:none;border:none;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab:hover:not(.active){color:var(--text);}
+
+/* OVERALL BAR */
+.overall-bar-wrap{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;}
+.overall-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;flex-wrap:wrap;gap:4px;}
+.overall-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;}
+.overall-pct{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent);}
+.overall-track{height:6px;background:var(--muted2);}
+.overall-fill{height:100%;background:linear-gradient(90deg,var(--accent3),var(--accent));transition:width .5s;}
+.overall-breakdown{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px;}
+.ob-item{font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);}
+
+/* PAGES */
+.page{display:none;padding:20px;max-width:1200px;margin:0 auto;}
+.page.active{display:block;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);padding:18px;margin-bottom:14px;}
+.card-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--accent);text-transform:uppercase;margin-bottom:14px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;}
+@media(max-width:700px){.g2,.g3{grid-template-columns:1fr;}} @media(max-width:900px){#page-calendar .g2-cal{grid-template-columns:1fr;}}
+
+/* STAT BOX */
+.stat-box{background:var(--card);border:1px solid var(--border);padding:14px;}
+.stat-lbl{font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:4px;}
+.stat-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--accent);line-height:1;}
+.stat-val.orange{color:var(--accent2);}
+.stat-val.purple{color:var(--accent3);}
+.stat-val.yellow{color:var(--yellow);}
+.stat-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+
+/* BAR */
+.bar-wrap{margin-bottom:12px;}
+.bar-labels{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;}
+.bar-labels span:first-child{color:var(--muted);}
+.bar-track{height:5px;background:var(--muted2);}
+.bar-fill{height:100%;background:var(--accent);transition:width .5s;}
+.bar-fill.orange{background:var(--accent2);}
+.bar-fill.purple{background:var(--accent3);}
+.bar-fill.yellow{background:var(--yellow);}
+
+/* INP */
+.inp{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:12px;padding:8px 10px;outline:none;width:100%;transition:border-color .2s;}
+.inp:focus{border-color:var(--accent);}
+.inp::placeholder{color:var(--muted);}
+select.inp{appearance:none;}
+.btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;padding:8px 14px;border:1px solid var(--border);background:none;color:var(--text);white-space:nowrap;transition:all .2s;}
+.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn.primary{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:700;}
+.btn.primary:hover{background:#00d4a8;}
+.btn.sm{font-size:9px;padding:4px 8px;}
+.del{background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:0 4px;}
+.del:hover{color:var(--red);}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.row .inp{flex:1;min-width:120px;}
+
+/* CHECKBOX */
+.cb-row{display:flex;align-items:flex-start;gap:10px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:border-color .2s;user-select:none;}
+.cb-row:hover{border-color:var(--border);}
+.cb-row.done{opacity:.55;}
+.cb-row.done .cb-label{text-decoration:line-through;color:var(--muted);}
+.cb-box{width:14px;height:14px;min-width:14px;border:1px solid var(--muted);background:transparent;margin-top:2px;position:relative;flex-shrink:0;transition:all .2s;}
+.cb-box.checked{background:var(--accent);border-color:var(--accent);}
+.cb-box.checked::after{content:'✓';position:absolute;top:-2px;left:1px;font-size:10px;color:#000;font-weight:bold;}
+.cb-label{font-size:12px;flex:1;line-height:1.4;}
+.tag{font-size:9px;padding:2px 6px;border:1px solid;white-space:nowrap;}
+.tag-lc{border-color:var(--accent2);color:var(--accent2);}
+.tag-math{border-color:var(--accent3);color:var(--accent3);}
+.tag-fin{border-color:var(--accent);color:var(--accent);}
+.tag-habit{border-color:var(--yellow);color:var(--yellow);}
+.tag-acad{border-color:#aa88ff;color:#aa88ff;}
+
+/* RING */
+.ring-wrap{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);padding:14px;margin-bottom:14px;}
+.ring-svg{width:64px;height:64px;transform:rotate(-90deg);flex-shrink:0;}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:5;}
+.ring-fg{fill:none;stroke:var(--accent);stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .4s;}
+.ring-pct{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent);}
+.ring-lbl{font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:2px;}
+
+/* HEATMAP */
+.heatmap{display:grid;grid-template-columns:repeat(52,1fr);gap:2px;margin:10px 0;}
+.hm-cell{aspect-ratio:1;background:var(--muted2);cursor:pointer;transition:transform .1s;}
+.hm-cell:hover{transform:scale(1.5);z-index:10;}
+.hm-cell.lv1{background:rgba(0,245,196,.2);}
+.hm-cell.lv2{background:rgba(0,245,196,.4);}
+.hm-cell.lv3{background:rgba(0,245,196,.7);}
+.hm-cell.lv4{background:var(--accent);}
+
+/* MILESTONE TAGS */
+.ms-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.ms{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid var(--border);color:var(--text);}
+.ms.done{border-color:var(--accent);color:var(--accent);background:rgba(0,245,196,.06);}
+.ms.orange{border-color:var(--accent2);color:var(--accent2);}
+.ms.purple{border-color:var(--accent3);color:var(--accent3);}
+
+/* TIMELINE */
+.tl-item{display:grid;grid-template-columns:120px 20px 1fr;gap:0 16px;margin-bottom:0;}
+.tl-time{text-align:right;padding:18px 0;font-size:10px;color:var(--muted);line-height:1.5;}
+.tl-time strong{display:block;font-size:11px;color:var(--text);margin-bottom:2px;}
+.tl-line{display:flex;flex-direction:column;align-items:center;}
+.tl-dot{width:20px;height:20px;border:2px solid var(--muted2);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:18px;z-index:1;transition:all .3s;}
+.tl-dot.active{border-color:var(--accent);background:var(--accent);}
+.tl-dot.active .tl-di{background:var(--bg);}
+.tl-dot.optional{border-color:var(--accent3);}
+.tl-dot.optional .tl-di{background:var(--accent3);}
+.tl-di{width:8px;height:8px;background:var(--muted2);clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);}
+.tl-conn{width:2px;flex:1;background:var(--muted2);min-height:16px;}
+.tl-conn.active{background:linear-gradient(to bottom,var(--accent),var(--muted2));}
+.tl-conn.optional{background:var(--accent3);opacity:.3;}
+.tl-body{padding:14px 0 20px;}
+.tl-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:2px;margin-bottom:10px;}
+.tl-title.active{color:var(--accent);}
+.tl-title.optional{color:var(--accent3);}
+.tl-card{background:var(--card);border:1px solid var(--border);padding:14px;margin-bottom:8px;}
+.tl-card.active{border-color:rgba(0,245,196,.25);}
+.tl-card.optional{border-color:rgba(123,97,255,.25);background:rgba(123,97,255,.03);}
+.tl-item-row{font-size:11.5px;color:var(--muted);padding:3px 0 3px 14px;position:relative;line-height:1.5;}
+.tl-item-row::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:10px;}
+.tl-item-row.opt{color:rgba(123,97,255,.8);}
+.tl-item-row.opt::before{color:var(--accent3);}
+@media(max-width:600px){.tl-item{grid-template-columns:70px 16px 1fr;gap:0 10px;}.tl-time{font-size:9px;}}
+
+/* GPA */
+.sem-card{background:var(--surface);border:1px solid var(--border);padding:14px;}
+.sem-card.current{border-color:rgba(0,245,196,.3);}
+.sem-lbl{font-size:9px;color:var(--accent);letter-spacing:2px;margin-bottom:2px;}
+.sem-name{font-size:11px;margin-bottom:1px;}
+.sem-period{font-size:9px;color:var(--muted);margin-bottom:8px;}
+.gpa-inp{background:transparent;border:none;border-bottom:1px solid var(--muted2);color:var(--accent);font-family:'Syne',sans-serif;font-size:20px;font-weight:800;width:65px;outline:none;}
+.gpa-inp:focus{border-bottom-color:var(--accent);}
+.gpa-bar-track{height:3px;background:var(--muted2);margin-top:6px;}
+.gpa-bar-fill{height:100%;transition:width .4s;}
+.gpa-status{font-size:9px;margin-top:3px;letter-spacing:1px;}
+
+/* PROGRESS TRACKER */
+.pr-card{background:var(--card);border:1px solid var(--border);padding:16px;margin-bottom:10px;}
+.pr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.pr-name{font-size:13px;}
+.pr-sub{font-size:10px;color:var(--muted);margin-top:1px;}
+.pr-pct{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+.pr-units{display:flex;flex-wrap:wrap;gap:3px;margin:10px 0;}
+.pr-unit{padding:3px 7px;font-size:9px;font-family:'Space Mono',monospace;cursor:pointer;border:1px solid var(--border);color:var(--muted);transition:all .15s;user-select:none;}
+.pr-unit.done{border-color:var(--accent);color:var(--accent);background:rgba(0,245,196,.1);}
+
+/* BOOKS */
+.book-row{display:flex;align-items:center;gap:10px;padding:10px;background:var(--surface);border:1px solid var(--border);margin-bottom:6px;}
+.book-title{flex:1;font-size:12px;}
+.book-author{font-size:10px;color:var(--muted);}
+.book-status-sel{background:var(--card);border:1px solid var(--border);color:var(--text);font-family:'Space Mono',monospace;font-size:9px;padding:3px 6px;outline:none;cursor:pointer;}
+
+/* TODO */
+.todo-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);margin-bottom:5px;}
+.todo-row.done .todo-title{text-decoration:line-through;color:var(--muted);}
+.todo-title{flex:1;font-size:12px;}
+.pri-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* NOTES */
+.note-card{background:var(--card);border:1px solid var(--border);padding:16px;margin-bottom:10px;}
+.note-inp{background:transparent;border:none;border-bottom:1px solid var(--muted2);color:var(--text);font-family:'Space Mono',monospace;font-size:11px;width:100%;outline:none;margin-bottom:10px;padding-bottom:4px;}
+.note-ta{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'DM Mono',monospace;font-size:12px;padding:10px;outline:none;resize:none;min-height:100px;line-height:1.6;}
+.note-ta:focus{border-color:var(--accent);}
+
+/* CAL */
+.cal-day{aspect-ratio:1;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);cursor:pointer;transition:all .15s;position:relative;}
+.cal-day.today{border-color:var(--accent);color:var(--accent);font-weight:700;}
+.cal-day.has-act{background:rgba(0,245,196,.12);color:var(--accent);}
+.cal-day.other{opacity:.3;}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-top">
+    <div class="logo">QUANT OS</div>
+    <div class="nav-badges">
+      <div class="badge" id="live-date-badge"></div>
+      <div class="badge green" id="day-badge"></div>
+      <button class="btn sm" onclick="document.getElementById('sync-modal').style.display='flex'" style="font-size:9px;padding:4px 10px;border-color:var(--accent3);color:var(--accent3);">☁ Sync</button>
+      <div class="badge purple">TARGET: JS/CITADEL 2029</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="goTab('daily',this)">Daily</button>
+    <button class="tab" onclick="goTab('tracker',this)">Tracker</button>
+    <button class="tab" onclick="goTab('gpa',this)">GPA</button>
+    <button class="tab" onclick="goTab('timeline',this)">Timeline</button>
+    <button class="tab" onclick="goTab('progress',this)">Progress</button>
+    <button class="tab" onclick="goTab('books',this)">Books</button>
+    <button class="tab" onclick="goTab('notes',this)">Notes</button>
+    <button class="tab" onclick="goTab('calendar',this)">📅 Calendar</button>
+    <button class="tab" onclick="goTab('fitness',this)">💪 Fitness</button>
+    <button class="tab" onclick="goTab('pr',this)">🏆 PRs</button>
+    <button class="tab" onclick="goTab('wlog',this)">📋 Log</button>
+  </div>
+</div>
+
+<!-- OVERALL BAR -->
+<div class="overall-bar-wrap">
+  <div class="overall-top">
+    <span class="overall-label">OVERALL PROGRESS TO JANE STREET 2029</span>
+    <span class="overall-pct" id="overall-pct">0.00%</span>
+  </div>
+  <div class="overall-track"><div class="overall-fill" id="overall-fill" style="width:0%"></div></div>
+  <div class="overall-breakdown" id="overall-bd"></div>
+</div>
+
+<!-- PAGES -->
+<div class="page active" id="page-daily">
+  <div style="display:grid;grid-template-columns:280px 1fr 1fr;gap:14px;align-items:start;">
+
+    <!-- COL 1: Ring + Non-negotiables -->
+    <div>
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="27"/>
+          <circle class="ring-fg" id="ring-fg" cx="32" cy="32" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6"/>
+        </svg>
+        <div><div class="ring-pct" id="ring-pct">0%</div><div class="ring-lbl">TODAY DONE</div></div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
+          <div class="card-title" style="margin-bottom:0;">Non-Negotiables</div>
+          <button class="btn sm" onclick="toggleAddNonneg()" id="nn-add-btn">+ Add</button>
+        </div>
+        <div id="nonneg-add-row" style="display:none;margin-bottom:10px;">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <input class="inp" id="nn-inp" placeholder="New habit..." style="flex:2;min-width:120px;" onkeydown="if(event.key==='Enter')addNonneg()">
+            <select class="inp" id="nn-tag-inp" style="max-width:100px;">
+              <option value="LC">LC</option>
+              <option value="MATH">MATH</option>
+              <option value="FINANCE">FINANCE</option>
+              <option value="HABIT" selected>HABIT</option>
+              <option value="ACAD">ACAD</option>
+              <option value="FITNESS">FITNESS</option>
+            </select>
+            <button class="btn primary" onclick="addNonneg()">Add</button>
+          </div>
+        </div>
+        <div id="nonneg-list"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Quick Note</div>
+        <textarea class="note-ta" id="daily-note" placeholder="Brain dump for today..." oninput="saveDailyNote()" style="min-height:80px;"></textarea>
+      </div>
+    </div>
+
+    <!-- COL 2: Mini calendar with event headlines -->
+    <div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <button class="btn sm" onclick="calPrev()">◀</button>
+          <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;" id="cal-label"></span>
+          <button class="btn sm" onclick="calNext()">▶</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;" id="cal-day-headers">
+          <div style="text-align:center;font-size:8px;color:var(--muted);">S</div>
+          <div style="text-align:center;font-size:8px;color:var(--muted);">M</div>
+          <div style="text-align:center;font-size:8px;color:var(--muted);">T</div>
+          <div style="text-align:center;font-size:8px;color:var(--muted);">W</div>
+          <div style="text-align:center;font-size:8px;color:var(--muted);">T</div>
+          <div style="text-align:center;font-size:8px;color:var(--muted);">F</div>
+          <div style="text-align:center;font-size:8px;color:var(--muted);">S</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;" id="cal-grid"></div>
+        <div id="upcoming-events" style="margin-top:12px;"></div>
+        <div style="margin-top:8px;">
+          <button class="btn sm" onclick="openCalTab()" style="width:100%;border-color:var(--accent);color:var(--accent);">Open Full Calendar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 3: To-Do list -->
+    <div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">To-Do List</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;">
+            <button class="btn sm" id="tf-all" onclick="setFilter('all',this)" style="border-color:var(--accent);color:var(--accent);">All</button>
+            <button class="btn sm" id="tf-active" onclick="setFilter('active',this)">Active</button>
+            <button class="btn sm" id="tf-done" onclick="setFilter('done',this)">Done</button>
+            <button class="btn sm" onclick="clearDone()">Clear Done</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;" id="pri-btns">
+          <button class="btn sm" onclick="setPri('all',this)" style="border-color:var(--accent);color:var(--accent);">All</button>
+          <button class="btn sm" onclick="setPri('high',this)">🔴 High</button>
+          <button class="btn sm" onclick="setPri('medium',this)">🟡 Med</button>
+          <button class="btn sm" onclick="setPri('low',this)">🟢 Low</button>
+        </div>
+        <div id="todo-list" style="min-height:30px;"></div>
+        <div style="margin-top:12px;background:var(--surface);border:1px solid var(--border);padding:12px;">
+          <div style="font-size:9px;color:var(--accent);letter-spacing:2px;margin-bottom:10px;">ADD TASK</div>
+          <div class="row">
+            <input class="inp" id="td-inp" placeholder="What needs to be done?" onkeydown="if(event.key==='Enter')addTodo()">
+          </div>
+          <div class="row">
+            <select class="inp" id="td-cat" style="flex:1;">
+              <option>Code</option><option>Math</option><option>Finance</option>
+              <option>Fitness</option><option>Academic</option><option>Personal</option><option>Other</option>
+            </select>
+            <select class="inp" id="td-pri" style="flex:1;">
+              <option value="high">🔴 High</option>
+              <option value="medium" selected>🟡 Medium</option>
+              <option value="low">🟢 Low</option>
+            </select>
+          </div>
+          <div class="row" style="align-items:center;">
+            <div style="flex:1;">
+              <div style="font-size:9px;color:var(--muted);margin-bottom:4px;letter-spacing:1px;">DUE DATE (required — shows on calendar)</div>
+              <input class="inp" id="td-due" type="date" style="width:100%;">
+            </div>
+            <button class="btn primary" onclick="addTodo()" style="align-self:flex-end;">+ Add</button>
+          </div>
+        </div>
+        <div style="font-size:9px;color:var(--muted);display:flex;justify-content:space-between;margin-top:6px;" id="todo-summary"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<style>
+@media(max-width:900px){#page-daily>div{grid-template-columns:1fr!important;}}
+</style>
+
+<div class="page" id="page-tracker">
+  <div class="g4" id="stat-boxes" style="margin-bottom:16px;"></div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Update Numbers</div>
+      <div id="tracker-inputs"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Progress Bars</div>
+      <div id="tracker-bars"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Activity Heatmap</div>
+    <div class="heatmap" id="heatmap"></div>
+    <div class="row" style="margin-top:10px;">
+      <input class="inp" id="hm-date" type="date" style="max-width:160px;">
+      <select class="inp" id="hm-lv" style="max-width:130px;">
+        <option value="0">No activity</option>
+        <option value="1">Light</option>
+        <option value="2">Medium</option>
+        <option value="3">Heavy</option>
+        <option value="4">Max grind</option>
+      </select>
+      <button class="btn primary" onclick="logHeatmap()">Log Day</button>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-gpa">
+  <div class="card">
+    <div class="card-title">Semester GPA Tracker</div>
+    <div class="g4" id="sem-grid" style="margin-bottom:16px;"></div>
+    <div style="background:var(--surface);border:1px solid var(--accent);padding:18px;display:flex;align-items:center;gap:20px;">
+      <div style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--accent);line-height:1;" id="cgpa-val">—</div>
+      <div>
+        <div style="font-size:9px;color:var(--muted);letter-spacing:2px;">CURRENT CGPA</div>
+        <div style="font-size:12px;margin-top:4px;" id="cgpa-sub">Enter GPAs above</div>
+        <div style="font-size:9px;color:var(--muted);margin-top:4px;">TARGET: 8.0+ CGPA</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Projection</div>
+    <div id="cgpa-proj" style="font-size:12px;color:var(--muted);line-height:2.2;"></div>
+  </div>
+</div>
+
+<div class="page" id="page-timeline">
+  <div class="g4" id="tl-stats" style="margin-bottom:20px;"></div>
+  <div id="timeline"></div>
+</div>
+
+<div class="page" id="page-progress">
+  <div class="card">
+    <div class="card-title">Add Resource</div>
+    <div class="row">
+      <input class="inp" id="pr-name" placeholder="Resource name...">
+      <select class="inp" id="pr-type" style="max-width:130px;">
+        <option value="chapters">Chapters</option>
+        <option value="lectures">Lectures</option>
+        <option value="problems">Problems</option>
+        <option value="videos">Videos</option>
+      </select>
+      <input class="inp" id="pr-total" type="number" placeholder="Total count" style="max-width:110px;" min="1">
+      <select class="inp" id="pr-cat" style="max-width:110px;">
+        <option>Math</option><option>Code</option><option>Finance</option><option>ML</option><option>Other</option>
+      </select>
+    </div>
+    <div class="row">
+      <input class="inp" id="pr-labels" placeholder="Labels (comma separated, optional) — e.g. Ch1,Ch2,Ch3">
+      <button class="btn primary" onclick="addResource()">+ Add</button>
+    </div>
+  </div>
+  <div id="progress-list"></div>
+</div>
+
+<div class="page" id="page-books">
+  <div class="card">
+    <div class="card-title">Add Book</div>
+    <div class="row">
+      <input class="inp" id="bk-title" placeholder="Title..." onkeydown="if(event.key==='Enter')addBook()">
+      <input class="inp" id="bk-author" placeholder="Author" style="max-width:180px;">
+      <select class="inp" id="bk-cat" style="max-width:110px;">
+        <option>Math</option><option>Finance</option><option>Code</option><option>Strategy</option><option>ML</option><option>Other</option>
+      </select>
+      <select class="inp" id="bk-status" style="max-width:120px;">
+        <option value="todo">To Read</option>
+        <option value="reading">Reading</option>
+        <option value="done">Done</option>
+      </select>
+      <button class="btn primary" onclick="addBook()">+ Add</button>
+    </div>
+  </div>
+  <div id="books-list"></div>
+</div>
+
+<div class="page" id="page-notes">
+  <div style="display:flex;gap:8px;margin-bottom:14px;">
+    <button class="btn primary" onclick="addNote()">+ New Note</button>
+    <input class="inp" id="note-search" placeholder="Search..." oninput="renderNotes()" style="max-width:220px;">
+  </div>
+  <div id="notes-list"></div>
+</div>
+
+
+<div class="page" id="page-calendar">
+  <div style="display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start;" class="cal-layout">
+<style>@media(max-width:900px){.cal-layout{grid-template-columns:1fr!important;}}</style>
+
+    <!-- LEFT: Full calendar -->
+    <div>
+      <div class="card" style="margin-bottom:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;">CALENDAR</div>
+            <div style="font-size:22px;font-family:'Syne',sans-serif;font-weight:800;color:var(--text);" id="cal-full-label"></div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <button class="btn" onclick="calPrev();renderCalPage();" style="padding:6px 14px;">◀ Prev</button>
+            <button class="btn" onclick="calToday();renderCalPage();" style="padding:6px 14px;border-color:var(--accent);color:var(--accent);">Today</button>
+            <button class="btn" onclick="calNext();renderCalPage();" style="padding:6px 14px;">Next ▶</button>
+          </div>
+        </div>
+        <!-- Day headers -->
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px;">
+          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">SUN</div>
+          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">MON</div>
+          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">TUE</div>
+          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">WED</div>
+          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">THU</div>
+          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">FRI</div>
+          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">SAT</div>
+        </div>
+        <div id="cal-full-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Agenda + Add event -->
+    <div>
+      <!-- Add event -->
+      <div class="card">
+        <div class="card-title">ADD EVENT</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <input class="inp" id="cal-new-title" placeholder="Title / deadline / task...">
+          <input class="inp" id="cal-new-date" type="date">
+          <div style="display:flex;gap:6px;">
+            <select class="inp" id="cal-new-type" style="flex:1;">
+              <option value="deadline">📅 Deadline</option>
+              <option value="exam">📝 Exam</option>
+              <option value="contest">⚡ Contest</option>
+              <option value="reminder">🔔 Reminder</option>
+              <option value="goal">🎯 Goal</option>
+              <option value="other">📌 Other</option>
+            </select>
+            <button class="btn primary" onclick="addCalEventDirect()">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming all events -->
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:6px;">
+          <div class="card-title" style="margin-bottom:0;">ALL UPCOMING</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap;" id="cal-filter-btns">
+            <button class="btn sm" onclick="setCalFilter('all',this)" style="border-color:var(--accent);color:var(--accent);">All</button>
+            <button class="btn sm" onclick="setCalFilter('deadline',this)">📅</button>
+            <button class="btn sm" onclick="setCalFilter('exam',this)">📝</button>
+            <button class="btn sm" onclick="setCalFilter('contest',this)">⚡</button>
+            <button class="btn sm" onclick="setCalFilter('goal',this)">🎯</button>
+          </div>
+        </div>
+        <div id="cal-agenda-list"></div>
+      </div>
+
+      <!-- Overdue -->
+      <div class="card" id="cal-overdue-card" style="display:none;border-color:var(--red);">
+        <div class="card-title" style="color:var(--red);">⚠ OVERDUE</div>
+        <div id="cal-overdue-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="page" id="page-fitness">
+
+  <!-- TARGETS BANNER -->
+  <div style="background:var(--card);border:1px solid var(--accent2);padding:16px;margin-bottom:16px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
+    <div>
+      <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--accent2);letter-spacing:3px;margin-bottom:4px;">YOUR PHYSIQUE TARGETS</div>
+      <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;">Lean Bulk → Cut → Shredded. ~12–16 months.</div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div class="stat-box" style="min-width:110px;"><div class="stat-lbl">Daily Calories</div><div class="stat-val orange">3000</div><div class="stat-sub">lean bulk phase</div></div>
+      <div class="stat-box" style="min-width:110px;"><div class="stat-lbl">Protein Target</div><div class="stat-val" style="color:#ff69b4;">165g</div><div class="stat-sub">~2.3g per kg</div></div>
+      <div class="stat-box" style="min-width:110px;"><div class="stat-lbl">Carbs Target</div><div class="stat-val purple">350g</div><div class="stat-sub">fuel for training</div></div>
+      <div class="stat-box" style="min-width:110px;"><div class="stat-lbl">Fat Target</div><div class="stat-val yellow">70g</div><div class="stat-sub">hormones + health</div></div>
+    </div>
+  </div>
+
+  <!-- MONTH GOALS -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="card-title">Month-by-Month Physique Goals</div>
+    <div id="month-goals-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;"></div>
+  </div>
+
+  <!-- TODAY LOG -->
+  <div class="g2">
+    <div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+          <div class="card-title" style="margin-bottom:0;">Today's Food Log</div>
+          <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);" id="fit-date-label"></div>
+        </div>
+
+        <!-- Macro rings -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;" id="macro-rings"></div>
+
+        <!-- Food search -->
+        <div class="row">
+          <input class="inp" id="food-search-inp" placeholder="Search food (e.g. rice, chicken, egg)..." onkeydown="if(event.key==='Enter')searchFood()">
+          <button class="btn primary" onclick="searchFood()">Search</button>
+        </div>
+        <div id="food-search-results" style="margin-bottom:10px;"></div>
+
+        <!-- Manual add -->
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">OR ADD MANUALLY</div>
+        <div class="row">
+          <input class="inp" id="food-name" placeholder="Food name">
+          <input class="inp" id="food-qty" type="number" placeholder="Qty (g/ml)" style="max-width:100px;" value="100">
+        </div>
+        <div class="row">
+          <input class="inp" id="food-cal" type="number" placeholder="Calories">
+          <input class="inp" id="food-pro" type="number" placeholder="Protein (g)">
+          <input class="inp" id="food-carb" type="number" placeholder="Carbs (g)">
+          <input class="inp" id="food-fat" type="number" placeholder="Fat (g)">
+          <button class="btn primary" onclick="addFoodManual()">+ Add</button>
+        </div>
+
+        <!-- Food log list -->
+        <div id="food-log-list" style="margin-top:6px;"></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Weekly summary -->
+      <div class="card">
+        <div class="card-title">Weekly Protein Average</div>
+        <div id="weekly-protein" style="display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+
+      <!-- Workout log -->
+      <div class="card">
+        <div class="card-title">Today's Workout</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;" id="workout-type-btns">
+          <button class="btn sm" onclick="setWorkout('Push',this)">Push</button>
+          <button class="btn sm" onclick="setWorkout('Pull',this)">Pull</button>
+          <button class="btn sm" onclick="setWorkout('Legs',this)">Legs</button>
+          <button class="btn sm" onclick="setWorkout('Cycling',this)">Cycling</button>
+          <button class="btn sm" onclick="setWorkout('Run',this)">Run</button>
+          <button class="btn sm" onclick="setWorkout('Swim',this)">Swim</button>
+          <button class="btn sm" onclick="setWorkout('Brick',this)">Brick</button>
+          <button class="btn sm" onclick="setWorkout('Rest',this)">Rest</button>
+        </div>
+        <div id="workout-logged" style="font-size:12px;color:var(--muted);margin-bottom:10px;"></div>
+        <textarea class="note-ta" id="workout-notes" placeholder="Describe your workout: e.g. Bench 4x8 @80kg, Incline DB 3x10 @24kg, Cable fly 3x15, Shoulder press 3x10 @50kg..." oninput="saveWorkoutNotes()" style="min-height:100px;"></textarea>
+        <button class="btn primary" onclick="rateWorkout()" style="width:100%;margin-top:8px;font-size:11px;padding:10px;">⚡ Rate My Workout with AI</button>
+        <div id="workout-rating-result" style="margin-top:10px;"></div>
+      </div>
+
+      <!-- Body stats -->
+      <div class="card">
+        <div class="card-title">Body Stats Log</div>
+        <div class="row">
+          <input class="inp" id="bs-weight" type="number" placeholder="Weight (kg)" step="0.1">
+          <input class="inp" id="bs-bf" type="number" placeholder="Body fat % (est)" step="0.1">
+          <button class="btn primary" onclick="logBodyStats()">Log</button>
+        </div>
+        <div id="body-stats-list" style="margin-top:8px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- PR TRACKER PAGE -->
+<div class="page" id="page-pr">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;">Personal Records</div>
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;">Track your best lifts and athletic milestones</div>
+    </div>
+  </div>
+
+  <!-- Add PR form -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">Log a PR</div>
+    <div class="row">
+      <input class="inp" id="pr-exercise" placeholder="Exercise (e.g. Deadlift, Bench Press)" list="exercise-list">
+      <datalist id="exercise-list">
+        <option value="Deadlift"><option value="Back Squat"><option value="Bench Press">
+        <option value="Overhead Press"><option value="Barbell Row"><option value="Pull-ups">
+        <option value="Incline Bench Press"><option value="Romanian Deadlift"><option value="Hip Thrust">
+        <option value="Dumbbell Press"><option value="Lateral Raises"><option value="Bicep Curl">
+        <option value="Tricep Pushdown"><option value="Cable Row"><option value="Leg Press">
+        <option value="Running 5K"><option value="Running 10K"><option value="Cycling 40K">
+        <option value="Swimming 1.9K"><option value="Ironman 70.3"><option value="Full Ironman">
+      </datalist>
+      <input class="inp" id="pr-weight" type="number" placeholder="Weight (kg) or Time" style="max-width:130px;" step="0.5">
+      <input class="inp" id="pr-reps" type="number" placeholder="Reps (optional)" style="max-width:100px;">
+    </div>
+    <div class="row">
+      <input class="inp" id="pr-date" type="date">
+      <input class="inp" id="pr-notes" placeholder="Notes (e.g. paused, belt, RPE 9)">
+      <button class="btn primary" onclick="addPR()">+ Log PR</button>
+    </div>
+  </div>
+
+  <!-- PR Cards by category -->
+  <div id="pr-list"></div>
+</div>
+
+<!-- WORKOUT LOGGER PAGE -->
+<div class="page" id="page-wlog">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+    <div>
+      <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;">Workout Log</div>
+      <div style="font-size:10px;color:var(--muted);letter-spacing:2px;">Every session. Track progress over time.</div>
+    </div>
+    <button class="btn primary" onclick="startNewSession()">+ New Session</button>
+  </div>
+
+  <!-- New session form -->
+  <div class="card" id="new-session-form" style="display:none;margin-bottom:16px;border-color:var(--accent);">
+    <div class="card-title">Log Session</div>
+    <div class="row">
+      <input class="inp" id="ws-date" type="date">
+      <select class="inp" id="ws-type" style="max-width:140px;">
+        <option>Push<option>Pull<option>Legs<option>Upper<option>Full Body
+        <option>Cycling<option>Running<option>Swimming<option>Brick<option>Rest
+      </select>
+      <input class="inp" id="ws-duration" type="number" placeholder="Duration (mins)" style="max-width:140px;">
+    </div>
+
+    <!-- Exercise entries -->
+    <div id="ws-exercises" style="margin-bottom:10px;"></div>
+    <button class="btn sm" onclick="addExerciseRow()" style="margin-bottom:12px;">+ Add Exercise</button>
+
+    <div class="row">
+      <textarea class="note-ta" id="ws-notes" placeholder="Overall notes, how you felt, energy level..." style="min-height:60px;flex:1;"></textarea>
+    </div>
+    <div class="row">
+      <select class="inp" id="ws-feel" style="max-width:150px;">
+        <option value="5">💪 Felt amazing</option>
+        <option value="4">😤 Solid session</option>
+        <option value="3" selected>😐 Average</option>
+        <option value="2">😩 Struggled</option>
+        <option value="1">💀 Terrible</option>
+      </select>
+      <button class="btn primary" onclick="saveSession()">Save Session</button>
+      <button class="btn" onclick="cancelSession()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;" id="wlog-filters">
+    <button class="btn sm" onclick="setWlogFilter('All',this)" style="border-color:var(--accent);color:var(--accent);">All</button>
+    <button class="btn sm" onclick="setWlogFilter('Push',this)">Push</button>
+    <button class="btn sm" onclick="setWlogFilter('Pull',this)">Pull</button>
+    <button class="btn sm" onclick="setWlogFilter('Legs',this)">Legs</button>
+    <button class="btn sm" onclick="setWlogFilter('Cycling',this)">Cycling</button>
+    <button class="btn sm" onclick="setWlogFilter('Running',this)">Running</button>
+    <button class="btn sm" onclick="setWlogFilter('Swimming',this)">Swimming</button>
+  </div>
+
+  <!-- Stats summary -->
+  <div class="g4" id="wlog-stats" style="margin-bottom:16px;"></div>
+
+  <!-- Session list -->
+  <div id="wlog-list"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+const SK = 'qos_v2';
+let S = {};
+
+function load() {
+  try { S = JSON.parse(localStorage.getItem(SK)) || {}; } catch(e) { S = {}; }
+  if (!S.nonneg) S.nonneg = [
+    {id:'n1',label:'2x LeetCode (C++)',tag:'LC',tc:'tag-lc'},
+    {id:'n2',label:'Zetamac 10 mins',tag:'HABIT',tc:'tag-habit'},
+    {id:'n3',label:'20 min markets review',tag:'FINANCE',tc:'tag-fin'},
+    {id:'n4',label:'GitHub commit',tag:'HABIT',tc:'tag-habit'},
+    {id:'n5',label:'Codeforces problem / upsolve',tag:'LC',tc:'tag-lc'},
+    {id:'n6',label:'Math / reading (1hr min)',tag:'MATH',tc:'tag-math'},
+    {id:'n7',label:'GPA — attend class / submit work',tag:'ACAD',tc:'tag-acad'},
+  ];
+  if (!S.nonneg_dates) S.nonneg_dates = {};
+  if (!S.tracker) S.tracker = {
+    lc:{current:0,target:1500},
+    cf:{current:0,target:1800},
+    streak:{current:0,target:365},
+    zetamac:{current:0,target:120},
+    wq:{current:0,target:10},
+    mocks:{current:0,target:50},
+    puzzles:{current:0,target:50},
+  };
+  // migrate old tracker
+  ['wq','mocks','puzzles'].forEach(k => { if (!S.tracker[k]) S.tracker[k] = {current:0,target:k==='wq'?10:50}; });
+  if (!S.heatmap) S.heatmap = {};
+  if (!S.gpa) S.gpa = {};
+  if (!S.todos) S.todos = [];
+  if (!S.daily_notes) S.daily_notes = {};
+  if (!S.notes) S.notes = [];
+  if (!S.books) S.books = DEFAULT_BOOKS.map((b,i) => ({...b, id:'bk'+i}));
+  if (!S.progress) S.progress = DEFAULT_PROGRESS.map((p,i) => ({...p, id:'pr'+i, done:[]}));
+  if (!S.cal_y) { S.cal_y = new Date().getFullYear(); S.cal_m = new Date().getMonth(); }
+  // init fitness state at load time to prevent null crashes
+  if (!S.food_log) S.food_log = {};
+  if (!S.workout_log) S.workout_log = {};
+  if (!S.body_stats) S.body_stats = [];
+  if (!S.prs) S.prs = {};
+  if (!S.sessions) S.sessions = [];
+  if (!S.wlog_filter) S.wlog_filter = 'All';
+  if (!S.cal_events) S.cal_events = {};
+}
+
+function save() {
+  try { localStorage.setItem(SK, JSON.stringify(S)); } catch(e) {}
+  updateOverall();
+}
+
+function tk() {
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+
+// ══════════════════════════════════════════════
+// DEFAULT DATA
+// ══════════════════════════════════════════════
+const DEFAULT_BOOKS = [
+  {title:'A First Course in Probability',author:'Sheldon Ross',cat:'Math',status:'todo'},
+  {title:'Options, Futures, and Other Derivatives',author:'John Hull',cat:'Finance',status:'todo'},
+  {title:'Heard on the Street',author:'Timothy Falcon Crack',cat:'Finance',status:'todo'},
+  {title:'A Practical Guide to Quant Finance Interviews',author:'Xinfeng Zhou',cat:'Finance',status:'todo'},
+  {title:'Fifty Challenging Problems in Probability',author:'Frederick Mosteller',cat:'Math',status:'todo'},
+  {title:'Stochastic Calculus for Finance I',author:'Steven Shreve',cat:'Math',status:'todo'},
+  {title:'Paul Wilmott on Quantitative Finance',author:'Paul Wilmott',cat:'Finance',status:'todo'},
+  {title:'Python for Data Analysis',author:'Wes McKinney',cat:'Code',status:'todo'},
+  {title:'Think Stats',author:'Allen Downey',cat:'Math',status:'todo'},
+  {title:'Quant Job Interview Q&A (Green Book)',author:'Mark Joshi',cat:'Finance',status:'todo'},
+  {title:'The Concepts and Practice of Mathematical Finance',author:'Mark Joshi',cat:'Finance',status:'todo'},
+  {title:'Introduction to Statistical Learning (ISLR)',author:'James, Witten et al.',cat:'ML',status:'todo'},
+  {title:'Advances in Financial Machine Learning',author:'Marcos Lopez de Prado',cat:'ML',status:'todo'},
+  {title:'How to Solve It',author:'George Polya',cat:'Math',status:'todo'},
+  {title:'C++ High Performance',author:'Bjorn Andrist',cat:'Code',status:'todo'},
+  {title:'Dynamic Hedging',author:'Nassim Taleb',cat:'Finance',status:'todo'},
+  {title:'Inside the Black Box',author:'Rishi Narang',cat:'Strategy',status:'todo'},
+  {title:'Algorithmic Trading',author:'Ernest Chan',cat:'Strategy',status:'todo'},
+];
+
+const DEFAULT_PROGRESS = [
+  {name:'learncpp.com',type:'chapters',total:27,cat:'Code',labels:Array.from({length:27},(_,i)=>'Ch'+(i+1))},
+  {name:'Sheldon Ross — Probability',type:'chapters',total:12,cat:'Math',labels:Array.from({length:12},(_,i)=>'Ch'+(i+1))},
+  {name:'Prof Leonard — Calc 1',type:'lectures',total:42,cat:'Math',labels:[]},
+  {name:'Prof Leonard — Calc 2',type:'lectures',total:38,cat:'Math',labels:[]},
+  {name:'Prof Leonard — Calc 3',type:'lectures',total:35,cat:'Math',labels:[]},
+  {name:'3Blue1Brown — Linear Algebra',type:'videos',total:15,cat:'Math',labels:['Vectors','Linear Combos','Matrices','Matrix Mult','3D Transforms','Determinants','Inverse Matrices','Cross Products','Dot Products','Change of Basis','Eigenvectors','Abstract Spaces','Cramer\'s Rule','Gram-Schmidt','Quick Eigenvalues']},
+  {name:'Trefor Bazett — Linear Algebra',type:'lectures',total:30,cat:'Math',labels:[]},
+  {name:'Hull — Options Futures Derivatives',type:'chapters',total:15,cat:'Finance',labels:Array.from({length:15},(_,i)=>'Ch'+(i+1))},
+  {name:'Mosteller 50 Problems',type:'problems',total:50,cat:'Finance',labels:[]},
+  {name:'Wilmott — Quant Finance',type:'chapters',total:8,cat:'Finance',labels:Array.from({length:8},(_,i)=>'Ch'+(i+1))},
+  {name:'Shreve — Stochastic Calc Vol 1',type:'chapters',total:7,cat:'Math',labels:Array.from({length:7},(_,i)=>'Ch'+(i+1))},
+  {name:'Mathematical Monk — Probability',type:'videos',total:30,cat:'Math',labels:[]},
+  {name:'StatQuest',type:'videos',total:25,cat:'Math',labels:[]},
+  {name:'ISLR — Statistical Learning',type:'chapters',total:10,cat:'ML',labels:Array.from({length:10},(_,i)=>'Ch'+(i+1))},
+  {name:'Heard on the Street',type:'chapters',total:6,cat:'Finance',labels:['S1','S2','S3','S4','S5','S6']},
+  {name:'Practical Guide to Quant Interviews',type:'chapters',total:6,cat:'Finance',labels:['Brainteasers','Calc & LA','Probability','Stochastic','Finance','C++']},
+  {name:'Mark Joshi Green Book',type:'chapters',total:7,cat:'Finance',labels:['Brainteasers','Probability','Stats','Finance','Derivatives','C++','Numerical']},
+  {name:'NeetCode 150',type:'problems',total:150,cat:'Code',labels:[]},
+  {name:'Jane Street Puzzles',type:'problems',total:50,cat:'Finance',labels:[]},
+  {name:'Mock Interviews',type:'problems',total:50,cat:'Finance',labels:[]},
+  {name:'Codeforces Upsolves',type:'problems',total:100,cat:'Code',labels:[]},
+];
+
+// ══════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════
+function goTab(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  const renders = {daily:renderDaily,tracker:renderTracker,gpa:renderGPA,timeline:renderTimeline,progress:renderProgress,books:renderBooks,notes:renderNotes,calendar:renderCalPage,fitness:renderFitness,pr:renderPRs,wlog:renderWlog};
+  if (renders[id]) renders[id]();
+}
+
+function renderHeader() {
+  const d = new Date();
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('live-date-badge').textContent = days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear();
+  const start = new Date('2026-05-26'); start.setHours(0,0,0,0);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = Math.floor((today - start) / 86400000);
+  document.getElementById('day-badge').textContent = diff < 0 ? 'STARTS TOMORROW' : diff === 0 ? 'DAY 1 — LET\'S GO' : 'DAY '+diff+' OF GRIND';
+}
+
+// ══════════════════════════════════════════════
+// OVERALL PROGRESS
+// ══════════════════════════════════════════════
+function updateOverall() {
+  const comps = [
+    {label:'LC', done:S.tracker.lc.current, total:1500, w:15},
+    {label:'CF', done:S.tracker.cf.current, total:1800, w:12},
+    {label:'Study', done:(S.progress||[]).reduce((a,r)=>a+r.done.length,0), total:Math.max((S.progress||[]).reduce((a,r)=>a+r.total,0),1), w:20},
+    {label:'Books', done:(S.books||[]).filter(b=>b.status==='done').length, total:Math.max((S.books||[]).length,1), w:12},
+    {label:'Habits', done:Object.values(S.nonneg_dates||{}).filter(d=>Object.values(d).some(Boolean)).length, total:365, w:12},
+    {label:'Mocks', done:S.tracker.mocks.current, total:50, w:10},
+    {label:'Puzzles', done:S.tracker.puzzles.current, total:50, w:6},
+    {label:'WQ', done:S.tracker.wq.current, total:10, w:5},
+    {label:'Todos', done:(S.todos||[]).filter(t=>t.done).length, total:Math.max((S.todos||[]).length,1), w:8},
+  ];
+  const tw = comps.reduce((a,c)=>a+c.w,0);
+  const wpct = comps.reduce((a,c)=>a+(Math.min(c.done/c.total,1))*(c.w/tw),0)*100;
+  const disp = wpct < 0.01 ? '0.00' : wpct.toFixed(2);
+  document.getElementById('overall-pct').textContent = disp+'%';
+  document.getElementById('overall-fill').style.width = Math.max(wpct,0.05)+'%';
+  document.getElementById('overall-bd').innerHTML = comps.map(c=>{
+    const p = Math.min(100,c.done/c.total*100);
+    const col = p>=75?'var(--green)':p>=30?'var(--yellow)':'var(--muted)';
+    return `<span class="ob-item" style="color:${col};">${c.label}: ${p.toFixed(1)}%</span>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// DAILY
+// ══════════════════════════════════════════════
+function renderDaily() {
+  const today = tk();
+  if (!S.nonneg_dates[today]) S.nonneg_dates[today] = {};
+  renderNonneg(today);
+  renderTodos();
+  renderMiniCal();
+  document.getElementById('daily-note').value = S.daily_notes[today] || '';
+  updateRing(today);
+}
+
+function renderNonneg(today) {
+  const el = document.getElementById('nonneg-list');
+  el.innerHTML = '';
+  const TAG_CLS = {LC:'tag-lc',MATH:'tag-math',FINANCE:'tag-fin',HABIT:'tag-habit',ACAD:'tag-acad',FITNESS:'tag-fin'};
+  S.nonneg.forEach(n => {
+    const done = !!S.nonneg_dates[today][n.id];
+    const tc = n.tc || TAG_CLS[n.tag] || 'tag-habit';
+    const div = document.createElement('div');
+    div.className = 'cb-row' + (done ? ' done' : '');
+    div.innerHTML = `<div class="cb-box ${done?'checked':''}"></div><div class="cb-label">${n.label}</div><div class="tag ${tc}">${n.tag}</div>${n.custom?`<button class="del" style="margin-left:6px;" onclick="event.stopPropagation();deleteNonneg('${n.id}')">×</button>`:''}`;
+    div.addEventListener('click', (e) => {
+      if (e.target.classList.contains('del')) return;
+      S.nonneg_dates[today][n.id] = !S.nonneg_dates[today][n.id];
+      save(); renderNonneg(today); updateRing(today);
+    });
+    el.appendChild(div);
+  });
+}
+
+function toggleAddNonneg() {
+  const row = document.getElementById('nonneg-add-row');
+  row.style.display = row.style.display === 'none' ? 'block' : 'none';
+  if (row.style.display === 'block') document.getElementById('nn-inp').focus();
+}
+
+function addNonneg() {
+  const inp = document.getElementById('nn-inp');
+  const tag = document.getElementById('nn-tag-inp').value;
+  const label = inp.value.trim();
+  if (!label) return;
+  const TAG_CLS = {LC:'tag-lc',MATH:'tag-math',FINANCE:'tag-fin',HABIT:'tag-habit',ACAD:'tag-acad',FITNESS:'tag-fin'};
+  const id = 'nn_' + Date.now();
+  S.nonneg.push({id, label, tag, tc: TAG_CLS[tag]||'tag-habit', custom: true});
+  inp.value = '';
+  document.getElementById('nonneg-add-row').style.display = 'none';
+  save();
+  const today = tk();
+  if (!S.nonneg_dates[today]) S.nonneg_dates[today] = {};
+  renderNonneg(today);
+  updateRing(today);
+}
+
+function deleteNonneg(id) {
+  S.nonneg = S.nonneg.filter(n => n.id !== id);
+  save();
+  const today = tk();
+  renderNonneg(today);
+  updateRing(today);
+}
+
+function updateRing(today) {
+  const vals = Object.values(S.nonneg_dates[today] || {});
+  const done = vals.filter(Boolean).length;
+  const total = S.nonneg.length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('ring-fg').style.strokeDashoffset = 169.6 - (pct/100)*169.6;
+  document.getElementById('ring-pct').textContent = pct+'%';
+}
+
+function saveDailyNote() {
+  S.daily_notes[tk()] = document.getElementById('daily-note').value;
+  save();
+}
+
+// ══════════════════════════════════════════════
+// TODO
+// ══════════════════════════════════════════════
+let tdFilter = 'all', tdPri = 'all';
+const PRI_COL = {high:'var(--red)',medium:'var(--yellow)',low:'var(--green)'};
+const CAT_COL = {Code:'var(--accent2)',Math:'var(--accent3)',Finance:'var(--accent)',Fitness:'#ff8c00',Academic:'#aa88ff',Personal:'#ff69b4',Other:'var(--muted)'};
+
+function setFilter(f, btn) {
+  tdFilter = f;
+  document.querySelectorAll('#tf-all,#tf-active,#tf-done').forEach(b=>{ b.style.borderColor='var(--border)'; b.style.color='var(--muted)'; });
+  btn.style.borderColor='var(--accent)'; btn.style.color='var(--accent)';
+  renderTodos();
+}
+
+function setPri(p, btn) {
+  tdPri = p;
+  document.querySelectorAll('#pri-btns .btn').forEach(b=>{ b.style.borderColor='var(--border)'; b.style.color='var(--muted)'; });
+  btn.style.borderColor='var(--accent)'; btn.style.color='var(--accent)';
+  renderTodos();
+}
+
+function renderTodos() {
+  const ct = document.getElementById('todo-list');
+  if (!ct) return;
+  let items = [...S.todos];
+  if (tdFilter === 'active') items = items.filter(t=>!t.done);
+  if (tdFilter === 'done') items = items.filter(t=>t.done);
+  if (tdPri !== 'all') items = items.filter(t=>t.priority===tdPri);
+  const po = {high:0,medium:1,low:2};
+  items.sort((a,b) => a.done!==b.done ? (a.done?1:-1) : (po[a.priority]||1)-(po[b.priority]||1));
+  ct.innerHTML = '';
+  const today = new Date().toISOString().split('T')[0];
+  items.forEach(t => {
+    const ri = S.todos.findIndex(x=>x.id===t.id);
+    const overdue = t.due && !t.done && t.due < today;
+    const div = document.createElement('div');
+    div.className = 'todo-row' + (t.done?' done':'');
+    div.style.borderColor = overdue ? 'var(--red)' : 'var(--border)';
+    const cc = CAT_COL[t.cat]||'var(--muted)';
+    div.innerHTML = `
+      <div class="cb-box ${t.done?'checked':''}" style="cursor:pointer;"></div>
+      <div class="todo-title">${t.title}</div>
+      <span class="tag" style="border-color:${cc};color:${cc};">${t.cat}</span>
+      <div class="pri-dot" style="background:${PRI_COL[t.priority]||'var(--muted)'};"></div>
+      ${t.due?`<span style="font-size:9px;color:${overdue?'var(--red)':'var(--muted)'};">${t.due}</span>`:''}
+      <button class="del">×</button>
+    `;
+    div.querySelector('.cb-box').addEventListener('click', () => {
+      S.todos[ri].done = !S.todos[ri].done; save(); renderTodos(); updateRing(tk());
+    });
+    div.querySelector('.del').addEventListener('click', () => {
+      removeTodoFromCal(t.id);
+      S.todos.splice(ri,1); save(); renderTodos(); renderMiniCal();
+    });
+    ct.appendChild(div);
+  });
+  const sm = document.getElementById('todo-summary');
+  if (sm) {
+    const done = S.todos.filter(t=>t.done).length;
+    const od = S.todos.filter(t=>!t.done&&t.due&&t.due<today).length;
+    sm.innerHTML = `<span>${done}/${S.todos.length} done</span><span style="color:${od?'var(--red)':'var(--muted)'};">${od?od+' overdue':''}</span>`;
+  }
+}
+
+function addTodo() {
+  const inp = document.getElementById('td-inp');
+  if (!inp.value.trim()) return;
+  const due = document.getElementById('td-due').value;
+  const id = 'td'+Date.now();
+  const title = inp.value.trim();
+  const cat = document.getElementById('td-cat').value;
+  const priority = document.getElementById('td-pri').value;
+  S.todos.push({id, title, cat, priority, due, done:false});
+
+  // Sync to calendar if due date set
+  if (due) {
+    if (!S.cal_events) S.cal_events = {};
+    const parts = due.split('-').map(Number);
+    const key = parts[0]+'-'+parts[1]+'-'+parts[2];
+    if (!S.cal_events[key]) S.cal_events[key] = [];
+    S.cal_events[key].push({id:'cal_td_'+id, title:'📋 '+title, type:'deadline', todoId:id});
+  }
+
+  inp.value=''; document.getElementById('td-due').value='';
+  save(); renderTodos();
+  renderMiniCal();
+  if (document.getElementById('page-calendar')?.classList.contains('active')) renderCalPage();
+}
+
+function clearDone() {
+  const doneTodos = S.todos.filter(t=>t.done);
+  doneTodos.forEach(t => removeTodoFromCal(t.id));
+  S.todos = S.todos.filter(t=>!t.done);
+  save(); renderTodos(); renderMiniCal();
+}
+
+function removeTodoFromCal(todoId) {
+  if (!S.cal_events) return;
+  Object.keys(S.cal_events).forEach(key => {
+    S.cal_events[key] = S.cal_events[key].filter(e => e.todoId !== todoId);
+    if (!S.cal_events[key].length) delete S.cal_events[key];
+  });
+}
+
+// ══════════════════════════════════════════════
+// MINI CALENDAR
+// ══════════════════════════════════════════════
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DNAMES = ['S','M','T','W','T','F','S'];
+
+const EVT_COLORS = {deadline:'var(--accent2)',exam:'#ff69b4',contest:'var(--accent)',reminder:'var(--yellow)',goal:'var(--green)',other:'var(--muted)'};
+let calModalDate = null;
+
+function renderMiniCal() {
+  if (!S.cal_y) { S.cal_y = new Date().getFullYear(); S.cal_m = new Date().getMonth(); }
+  if (!S.cal_events) S.cal_events = {};
+  const calLbl = document.getElementById('cal-label');
+  if (calLbl) calLbl.textContent = MONTHS[S.cal_m]+' '+S.cal_y;
+  const calFullLbl = document.getElementById('cal-full-label');
+  if (calFullLbl) calFullLbl.textContent = MONTHS[S.cal_m]+' '+S.cal_y;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = DNAMES.map(d=>`<div style="font-size:9px;color:var(--muted);text-align:center;padding:2px;">${d}</div>`).join('');
+  const first = new Date(S.cal_y, S.cal_m, 1).getDay();
+  const dim = new Date(S.cal_y, S.cal_m+1, 0).getDate();
+  const today = new Date();
+  for (let i=0;i<first;i++) grid.innerHTML += '<div></div>';
+  for (let d=1;d<=dim;d++) {
+    const isToday = today.getFullYear()===S.cal_y && today.getMonth()===S.cal_m && today.getDate()===d;
+    const key = S.cal_y+'-'+(S.cal_m+1)+'-'+d;
+    const hasAct = S.heatmap[key] && S.heatmap[key]>0;
+    const evts = S.cal_events[key] || [];
+    const cell = document.createElement('div');
+    cell.style.cssText = 'text-align:center;cursor:pointer;padding:3px 1px;font-size:11px;position:relative;border-radius:2px;';
+    if (isToday) { cell.style.background='var(--accent)'; cell.style.color='#000'; cell.style.fontWeight='800'; }
+    else if (evts.length) { cell.style.background='rgba(0,245,196,.08)'; cell.style.border='1px solid rgba(0,245,196,.25)'; }
+    else if (hasAct) { cell.style.background='rgba(0,245,196,.05)'; }
+    cell.innerHTML = d + (evts.length ? `<div style="display:flex;justify-content:center;gap:2px;margin-top:1px;">${evts.slice(0,3).map(e=>`<div style="width:4px;height:4px;border-radius:50%;background:${EVT_COLORS[e.type]||'var(--accent)'}"></div>`).join('')}</div>` : '');
+    cell.title = evts.length ? evts.map(e=>e.title).join(', ') : '';
+    cell.addEventListener('click', () => openCalModal(key, d));
+    grid.appendChild(cell);
+  }
+  renderUpcomingEvents();
+}
+
+function openCalModal(key, d) {
+  calModalDate = key;
+  if (!S.cal_events) S.cal_events = {};
+  if (!S.cal_events[key]) S.cal_events[key] = [];
+  document.getElementById('cal-modal-date').textContent = MONTHS[S.cal_m]+' '+d+', '+S.cal_y;
+  document.getElementById('cal-evt-title').value = '';
+  renderCalModalEvents(key);
+  const modal = document.getElementById('cal-modal');
+  modal.style.display = 'flex';
+  setTimeout(() => document.getElementById('cal-evt-title').focus(), 50);
+}
+
+function renderCalModalEvents(key) {
+  const ct = document.getElementById('cal-modal-events');
+  const evts = S.cal_events[key] || [];
+  if (!evts.length) { ct.innerHTML = '<div style="font-size:11px;color:var(--muted);">No events yet. Add one below.</div>'; return; }
+  ct.innerHTML = evts.map((e,i) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface);border:1px solid ${EVT_COLORS[e.type]||'var(--border)'};">
+      <span style="font-size:10px;color:${EVT_COLORS[e.type]||'var(--muted)'};">${{deadline:'📅',exam:'📝',contest:'⚡',reminder:'🔔',goal:'🎯',other:'📌'}[e.type]||'📌'}</span>
+      <span style="font-size:12px;flex:1;">${e.title}</span>
+      <button class="del" onclick="deleteCalEvent('${key}',${i})">×</button>
+    </div>`).join('');
+}
+
+function saveCalEvent() {
+  const title = document.getElementById('cal-evt-title').value.trim();
+  const type = document.getElementById('cal-evt-type').value;
+  if (!title || !calModalDate) return;
+  if (!S.cal_events[calModalDate]) S.cal_events[calModalDate] = [];
+  S.cal_events[calModalDate].push({id:'ev'+Date.now(), title, type});
+  document.getElementById('cal-evt-title').value = '';
+  save();
+  renderCalModalEvents(calModalDate);
+  renderMiniCal();
+}
+
+function deleteCalEvent(key, idx) {
+  S.cal_events[key].splice(idx, 1);
+  if (!S.cal_events[key].length) delete S.cal_events[key];
+  save();
+  renderCalModalEvents(key);
+  renderMiniCal();
+}
+
+
+function renderUpcomingEvents() {
+  if (!S.cal_events) return;
+  const ct = document.getElementById('upcoming-events');
+  if (!ct) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const upcoming = [];
+  Object.entries(S.cal_events).forEach(([key, evts]) => {
+    const parts = key.split('-').map(Number);
+    const d = new Date(parts[0], parts[1]-1, parts[2]);
+    if (d >= today) {
+      evts.forEach(e => upcoming.push({...e, date: key, d}));
+    }
+  });
+  upcoming.sort((a,b) => a.d - b.d);
+  if (!upcoming.length) { ct.innerHTML = ''; return; }
+  ct.innerHTML = '<div style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">UPCOMING</div>' +
+    upcoming.slice(0,5).map(e => {
+      const diff = Math.round((e.d - today) / 86400000);
+      const diffLabel = diff === 0 ? 'TODAY' : diff === 1 ? 'TOMORROW' : diff + 'd away';
+      const col = EVT_COLORS[e.type] || 'var(--muted)';
+      return `<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--surface);border-left:2px solid ${col};margin-bottom:4px;">
+        <span style="font-size:10px;flex:1;color:var(--text);">${e.title}</span>
+        <span style="font-size:9px;color:${diff<=1?'var(--accent2)':'var(--muted)'};">${diffLabel}</span>
+      </div>`;
+    }).join('');
+}
+
+function closeCalModal() {
+  document.getElementById('cal-modal').style.display = 'none';
+  calModalDate = null;
+}
+
+// Wired at init time — see wireCalModal()
+
+function calPrev() {
+  S.cal_m--; if(S.cal_m<0){S.cal_m=11;S.cal_y--;}
+  save(); renderMiniCal();
+  if (document.getElementById('page-calendar')?.classList.contains('active')) renderCalPage();
+}
+function calNext() {
+  S.cal_m++; if(S.cal_m>11){S.cal_m=0;S.cal_y++;}
+  save(); renderMiniCal();
+  if (document.getElementById('page-calendar')?.classList.contains('active')) renderCalPage();
+}
+
+// ══════════════════════════════════════════════
+// TRACKER
+// ══════════════════════════════════════════════
+const TCFG = [
+  {key:'lc',label:'LeetCode Problems',target:1500,cls:'',ms:[80,300,550,800,1000,1500]},
+  {key:'cf',label:'Codeforces Rating',target:1800,cls:'orange',ms:[900,1200,1500,1800]},
+  {key:'streak',label:'Day Streak',target:365,cls:'yellow',ms:[7,30,100,200,365]},
+  {key:'zetamac',label:'Zetamac Best Score',target:120,cls:'purple',ms:[40,60,80,100,120]},
+  {key:'wq',label:'WorldQuant Alphas',target:10,cls:'',ms:[1,3,5,10]},
+  {key:'mocks',label:'Mock Interviews',target:50,cls:'orange',ms:[5,10,20,35,50]},
+  {key:'puzzles',label:'JS Puzzles Done',target:50,cls:'purple',ms:[5,10,20,35,50]},
+];
+
+function renderTracker() {
+  // stat boxes
+  const sb = document.getElementById('stat-boxes');
+  sb.innerHTML = '';
+  TCFG.forEach(c => {
+    const val = S.tracker[c.key]?.current||0;
+    const pct = Math.min(100,Math.round(val/c.target*100));
+    const box = document.createElement('div');
+    box.className = 'stat-box';
+    box.innerHTML = `<div class="stat-lbl">${c.label}</div>
+      <input style="background:transparent;border:none;border-bottom:1px solid var(--muted2);color:var(--accent);font-family:'Syne',sans-serif;font-size:26px;font-weight:800;width:100%;outline:none;" 
+        class="${c.cls}" type="number" value="${val}" min="0" data-key="${c.key}">
+      <div class="stat-sub">${pct}% to ${c.target}</div>`;
+    box.querySelector('input').addEventListener('change', function() {
+      S.tracker[this.dataset.key].current = parseFloat(this.value)||0;
+      save(); renderTrackerBars();
+    });
+    sb.appendChild(box);
+  });
+  renderTrackerBars();
+  renderHeatmap();
+}
+
+function renderTrackerBars() {
+  // milestone badges
+  const ti = document.getElementById('tracker-inputs');
+  ti.innerHTML = '';
+  TCFG.forEach(c => {
+    const val = S.tracker[c.key]?.current||0;
+    const div = document.createElement('div');
+    div.style.marginBottom = '14px';
+    div.innerHTML = `<div style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:6px;">${c.label.toUpperCase()}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;">${c.ms.map(m=>`<span class="ms ${val>=m?'done':''}">${m}${val>=m?' ✓':''}</span>`).join('')}</div>`;
+    ti.appendChild(div);
+  });
+  // bars
+  const tb = document.getElementById('tracker-bars');
+  tb.innerHTML = '';
+  TCFG.forEach(c => {
+    const val = S.tracker[c.key]?.current||0;
+    const pct = Math.min(100,Math.round(val/c.target*100));
+    const div = document.createElement('div');
+    div.className = 'bar-wrap';
+    div.innerHTML = `<div class="bar-labels"><span>${c.label}</span><span>${val}/${c.target}</span></div>
+      <div class="bar-track"><div class="bar-fill ${c.cls}" style="width:${pct}%"></div></div>`;
+    tb.appendChild(div);
+  });
+}
+
+function renderHeatmap() {
+  const hm = document.getElementById('heatmap');
+  hm.innerHTML = '';
+  const today = new Date();
+  for (let w=51;w>=0;w--) {
+    for (let d=6;d>=0;d--) {
+      const date = new Date(today);
+      date.setDate(today.getDate()-(w*7+d));
+      const key = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+      const lv = S.heatmap[key]||0;
+      const cell = document.createElement('div');
+      cell.className = 'hm-cell' + (lv>0?' lv'+lv:'');
+      cell.title = key;
+      hm.appendChild(cell);
+    }
+  }
+  const d = new Date();
+  document.getElementById('hm-date').value = d.toISOString().split('T')[0];
+}
+
+function logHeatmap() {
+  const dateVal = document.getElementById('hm-date').value;
+  const lv = parseInt(document.getElementById('hm-lv').value);
+  if (!dateVal) return;
+  const parts = dateVal.split('-');
+  const key = parseInt(parts[0])+'-'+parseInt(parts[1])+'-'+parseInt(parts[2]);
+  if (lv===0) delete S.heatmap[key]; else S.heatmap[key]=lv;
+  save(); renderHeatmap();
+}
+
+// ══════════════════════════════════════════════
+// GPA
+// ══════════════════════════════════════════════
+const SEMS = [
+  {id:'s1',label:'SEM 1',name:'Semester 1',period:'Jul–Nov 2025',target:8.5,cur:true},
+  {id:'s2',label:'SEM 2',name:'Semester 2',period:'Dec–Apr 2026',target:8.5,cur:true},
+  {id:'s3',label:'SEM 3',name:'Semester 3',period:'Jun–Nov 2026',target:8.5,cur:false},
+  {id:'s4',label:'SEM 4',name:'Semester 4',period:'Dec–May 2027',target:8.5,cur:false},
+  {id:'s5',label:'SEM 5',name:'Semester 5',period:'Jun–Nov 2027',target:8.5,cur:false},
+  {id:'s6',label:'SEM 6',name:'Semester 6',period:'Dec–May 2028',target:8.5,cur:false},
+  {id:'s7',label:'SEM 7',name:'Semester 7',period:'Jun–Nov 2028',target:8.0,cur:false},
+  {id:'s8',label:'SEM 8',name:'Semester 8',period:'Dec–Apr 2029',target:8.0,cur:false},
+];
+
+function renderGPA() {
+  const grid = document.getElementById('sem-grid');
+  grid.innerHTML = '';
+  SEMS.forEach(sem => {
+    const val = S.gpa[sem.id]||'';
+    const card = document.createElement('div');
+    card.className = 'sem-card' + (sem.cur?' current':'');
+    card.innerHTML = `<div class="sem-lbl">${sem.label}</div>
+      <div class="sem-name">${sem.name}</div>
+      <div class="sem-period">${sem.period}</div>
+      <input class="gpa-inp" type="number" min="0" max="10" step="0.01" placeholder="—" value="${val}" data-id="${sem.id}" data-target="${sem.target}">
+      <div style="font-size:9px;color:var(--muted);margin-top:4px;">Target: ${sem.target}+</div>
+      <div class="gpa-bar-track"><div class="gpa-bar-fill" id="gb-${sem.id}" style="width:${val?Math.min(100,val/10*100):0}%;background:${getGPAColor(val,sem.target)};"></div></div>
+      <div class="gpa-status" id="gs-${sem.id}" style="color:${getGPAColor(val,sem.target)};">${getGPAStatus(val,sem.target)}</div>`;
+    card.querySelector('input').addEventListener('input', function() {
+      S.gpa[this.dataset.id] = this.value;
+      save(); updateGPACard(this.dataset.id, this.value, parseFloat(this.dataset.target)); updateCGPA();
+    });
+    grid.appendChild(card);
+  });
+  updateCGPA();
+}
+
+function getGPAColor(val, target) {
+  if (!val) return 'var(--muted2)';
+  const v = parseFloat(val);
+  return v>=target?'var(--green)':v>=target-0.5?'var(--yellow)':'var(--red)';
+}
+function getGPAStatus(val, target) {
+  if (!val) return 'Not entered';
+  const v = parseFloat(val);
+  return v>=target?'✓ On target':v>=target-0.5?'⚠ Close':'✗ Below';
+}
+function updateGPACard(id, val, target) {
+  const bar = document.getElementById('gb-'+id);
+  const stat = document.getElementById('gs-'+id);
+  if (!bar||!stat) return;
+  bar.style.width = val?Math.min(100,val/10*100)+'%':'0%';
+  bar.style.background = getGPAColor(val,target);
+  stat.style.color = getGPAColor(val,target);
+  stat.textContent = getGPAStatus(val,target);
+}
+function updateCGPA() {
+  const vals = SEMS.map(s=>parseFloat(S.gpa[s.id])).filter(v=>!isNaN(v)&&v>0);
+  const cv = document.getElementById('cgpa-val');
+  const cs = document.getElementById('cgpa-sub');
+  if (!vals.length) { cv.textContent='—'; cs.textContent='Enter GPAs above'; return; }
+  const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+  cv.textContent = avg.toFixed(2);
+  cv.style.color = avg>=8.0?'var(--green)':avg>=7.5?'var(--yellow)':'var(--red)';
+  cs.textContent = `${vals.length} sem avg · Target 8.0+`;
+  const rem = 8-vals.length;
+  const proj = document.getElementById('cgpa-proj');
+  if (proj && rem>0) {
+    const sum = vals.reduce((a,b)=>a+b,0);
+    const n80 = (8.0*8-sum)/rem;
+    const n85 = (8.5*8-sum)/rem;
+    const n90 = ((sum+9.0*rem)/8).toFixed(2);
+    proj.innerHTML = `
+      <span>For <b style="color:var(--accent)">8.0 CGPA</b>: need <b style="color:var(--accent)">${n80.toFixed(2)}</b> avg over ${rem} remaining sems</span><br>
+      <span>For <b style="color:var(--accent3)">8.5 CGPA</b>: need <b style="color:var(--accent3)">${n85.toFixed(2)}</b> avg over ${rem} remaining sems</span><br>
+      <span>If you score <b style="color:var(--green)">9.0</b> every remaining sem → final CGPA: <b style="color:var(--green)">${n90}</b></span>`;
+  } else if (proj) {
+    proj.innerHTML = `<span style="color:var(--green)">All 8 sems complete. Final CGPA: ${avg.toFixed(2)}</span>`;
+  }
+}
+
+// ══════════════════════════════════════════════
+// TIMELINE
+// ══════════════════════════════════════════════
+const PHASES = [
+  {period:'MAY 26\nJUN 2026',label:'PRE-LAUNCH',status:'active',
+    items:['Clear sem 2 end sems — no more backs ever','Engineering Physics back exam prep begins','Set up learncpp.com, LeetCode, Codeforces accounts','Install VS Code + C++ compiler (MinGW on Windows)','Create GitHub profile — green squares start TODAY','Set up Zetamac daily habit','Read Hull Ch 1 to get the vibe','How to Solve It — George Polya, start reading'],
+    ms:[{t:'Accounts ready',c:''},{t:'C++ setup',c:''},{t:'GitHub live',c:'orange'},{t:'Sem 2 cleared',c:'orange'}]},
+  {period:'JUN–AUG\n2026',label:'SUMMER FOUNDATION',status:'future',
+    items:['C++ full curriculum — learncpp.com all 27 chapters','Sheldon Ross Ch 1–4 + solve ALL problems','Mathematical Monk probability series (YouTube)','3Blue1Brown Essence of Linear Algebra (15 videos)','Professor Leonard Calc 1 full playlist','LeetCode: 0 → 80+ (arrays, strings, hashmaps, trees)','Codeforces: Div 2 A+B problems — target 900+','Zetamac daily — target 60+ in 2 mins','Jane Street puzzle archive — 1/week','Hull Ch 1–5 (futures, forwards, interest rates)','Mosteller #1–25'],
+    ms:[{t:'80+ LC',c:''},{t:'CF 900+',c:'orange'},{t:'Ross Ch1–4',c:''},{t:'Calc 1 done',c:''},{t:'C++ comfortable',c:''}]},
+  {period:'SEP–NOV\n2026',label:'Y2S1 — BUILD SPEED',status:'future',
+    items:['LeetCode: 80 → 300+ (DP, graphs, heaps, backtracking)','Codeforces: 900 → 1200+ (greedy, prefix sums)','Trefor Bazett Linear Algebra full course','Sheldon Ross Ch 5–8 (CLT, LLN — critical for quant)','Professor Leonard Calc 2 (Taylor series — must know cold)','Python for Everybody + start McKinney Pandas','Hull Ch 6–10 (swaps, options, put-call parity — derive it)','Mosteller #26–50 complete','Heard on the Street — start','QuantConnect: SMA crossover momentum strategy','Clear Engineering Physics back exam','Weekly mock interviews (1/week) — coding + brainteaser'],
+    ms:[{t:'300+ LC',c:''},{t:'CF 1200+',c:'orange'},{t:'Ross complete',c:''},{t:'Hull Ch1–10',c:''},{t:'Physics cleared ★',c:'orange'}]},
+  {period:'DEC 2026\nMAY 2027',label:'Y2S2 — FINANCE + APPLY',status:'future',
+    items:['LeetCode: 300 → 550+ (mediums/hards, company-tagged)','Codeforces: 1200 → 1500+ (Div 2 C consistently)','Hull Ch 11–15 (Black-Scholes, Greeks, binomial trees)','Heard on the Street — complete all sections','Practical Guide to Quant Finance Interviews — all problems','Mark Joshi Green Book — all problems','Professor Leonard Calc 3 (partial derivatives, gradients)','StatQuest + Think Stats (stats in Python)','Wilmott Ch 1–4 (Ito lemma, Black-Scholes derivation)','QuantConnect: mean reversion + pairs trading','WorldQuant Brain — first alpha, target IR > 1.0','2x mock interviews/week','⚡ APPLY JANE STREET — December 2026 (early apps open)'],
+    ms:[{t:'550+ LC',c:''},{t:'CF 1500+',c:'orange'},{t:'Hull complete',c:''},{t:'Green Book done',c:''},{t:'JS Applied Dec 2026 ★',c:'orange'}]},
+  {period:'JUN–NOV\n2027',label:'Y3S1 — RESEARCH + DEPTH',status:'future',
+    items:['LeetCode: 550 → 800+ (hards, LC weekly contest)','Codeforces: 1500 → 1800+ (Div 2 D, advanced DP)','Wilmott Ch 5–8 (exotic options, numerical methods, credit)','Shreve Vol 1 Ch 1–3 (measure theory, Brownian motion)','McKinney Python — apply to real financial data','Research project: pick topic, read 5 papers, outline','WorldQuant Brain: 3+ alphas, IR > 1.0','3x mock interviews/week (coding + brainteaser + finance)','NeetCode 150 — complete all patterns','Zetamac target 100+ in 2 mins','C++ low latency: memory, cache lines, profiling'],
+    ms:[{t:'800+ LC',c:''},{t:'CF 1800+ ★',c:'orange'},{t:'WQ Alpha IR>1',c:'purple'},{t:'Research started',c:'purple'}]},
+  {period:'DEC 2027\nMAY 2028',label:'Y3S2 — INTERNSHIP SEASON',status:'future',
+    items:['APPLY JANE STREET December 2027 — SGP + HK + NYC','Apply Citadel, Two Sigma, Optiver, D.E. Shaw simultaneously','3x mock interviews/week — full superday simulation','Shreve Vol 1 complete (stochastic integrals, risk-neutral pricing)','Research project first draft — send to supervisor','LeetCode: 800 → 1000+ (speed: known problems <15 mins)','Daily: probability drills + mental math + JS puzzles','GitHub: 3 pinned repos (LC, QuantConnect strategy, research)','Resume: 1 page, CF + LC + WQ alphas explicitly listed','Maintain 8.5+ SGPA'],
+    ms:[{t:'JS/Citadel applied ★',c:'orange'},{t:'1000+ LC',c:''},{t:'Shreve complete',c:''},{t:'Internship secured ★',c:'orange'}]},
+  {period:'JUN 2028\nMAY 2029',label:'Y4 — CONVERT & CLOSE',status:'future',
+    items:['Convert internship to full-time offer — single goal','First 2 weeks: learn everything, ask questions, be humble','Deliver on your project — quality beats quantity','Build real relationships — full-timers vote on return offers','Continue LC + CF — don\'t go cold','Publish research (SSRN or college symposium)','Final exams — maintain 8.0+ CGPA','Name the yacht. Retire the parents. Done.'],
+    ms:[{t:'Return Offer ★',c:'orange'},{t:'Research published',c:'purple'},{t:'8.0+ CGPA',c:''},{t:'DONE ✓',c:'orange'}]},
+  {period:'Y2S2+\nPARALLEL',label:'⚡ ML — OPTIONAL BUT USEFUL',status:'optional',
+    items:['ISLR — Statistical Learning (free PDF, do exercises in Python)','sklearn — regression, trees, boosting, cross-validation','CS229 Stanford — Andrew Ng (free YouTube)','Time series: ARIMA, GARCH on real financial data','Factor models: Fama-French 3 & 5 factor — implement yourself','Backtesting ML signals — understand lookahead bias cold','Lopez de Prado — Advances in Financial ML (skim first)','PyTorch basics — tensors, autograd, training loop','⚠ DO THIS ONLY AFTER: Ross + Hull + 300+ LC. Two Sigma/D.E. Shaw value this heavily.'],
+    ms:[{t:'ISLR done',c:'purple'},{t:'sklearn fluent',c:'purple'},{t:'CS229 done',c:'purple'},{t:'ML alpha on WQ',c:'purple'}]},
+];
+
+function renderTimeline() {
+  const lc = S.tracker.lc.current;
+  const cf = S.tracker.cf.current;
+  const gpaVals = SEMS.map(s=>parseFloat(S.gpa[s.id])).filter(v=>!isNaN(v)&&v>0);
+  const cgpa = gpaVals.length?(gpaVals.reduce((a,b)=>a+b,0)/gpaVals.length).toFixed(2):'—';
+  document.getElementById('tl-stats').innerHTML = `
+    <div class="stat-box"><div class="stat-lbl">LeetCode</div><div class="stat-val">${lc}<span style="font-size:14px;color:var(--muted);">/1500</span></div></div>
+    <div class="stat-box"><div class="stat-lbl">Codeforces</div><div class="stat-val orange">${cf}<span style="font-size:14px;color:var(--muted);">/1800</span></div></div>
+    <div class="stat-box"><div class="stat-lbl">CGPA</div><div class="stat-val purple">${cgpa}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Streak</div><div class="stat-val yellow">${S.tracker.streak.current}d</div></div>
+    <div class="stat-box"><div class="stat-lbl">Mock Interviews</div><div class="stat-val">${S.tracker.mocks.current}<span style="font-size:14px;color:var(--muted);">/50</span></div></div>
+    <div class="stat-box"><div class="stat-lbl">WQ Alphas</div><div class="stat-val purple">${S.tracker.wq.current}<span style="font-size:14px;color:var(--muted);">/10</span></div></div>
+  `;
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = '';
+  PHASES.forEach((ph, i) => {
+    const isActive = ph.status==='active';
+    const isOpt = ph.status==='optional';
+    const item = document.createElement('div');
+    item.className = 'tl-item';
+    const connCls = isActive?'active':isOpt?'optional':'';
+    item.innerHTML = `
+      <div class="tl-time"><strong>${ph.period.replace('\n','<br>')}</strong></div>
+      <div class="tl-line">
+        <div class="tl-dot ${isActive?'active':isOpt?'optional':''}"><div class="tl-di"></div></div>
+        ${i<PHASES.length-1?`<div class="tl-conn ${connCls}"></div>`:''}
+      </div>
+      <div class="tl-body">
+        <div class="tl-title ${isActive?'active':isOpt?'optional':''}">${ph.label}${isActive?' ◀ NOW':''}</div>
+        <div class="tl-card ${isActive?'active':isOpt?'optional':''}">
+          ${isOpt?'<div style="font-size:9px;color:var(--accent3);letter-spacing:2px;margin-bottom:8px;">DO ALONGSIDE MAIN ROADMAP — NOT INSTEAD OF IT</div>':''}
+          ${ph.items.map(it=>`<div class="tl-item-row ${isOpt?'opt':''}">${it}</div>`).join('')}
+        </div>
+        <div class="ms-row">${ph.ms.map(m=>`<div class="ms ${m.c}">${m.t}</div>`).join('')}</div>
+      </div>
+    `;
+    tl.appendChild(item);
+  });
+}
+
+// ══════════════════════════════════════════════
+// PROGRESS
+// ══════════════════════════════════════════════
+const PR_COL = {Math:'var(--accent3)',Code:'var(--accent2)',Finance:'var(--accent)',ML:'#ff69b4',Other:'var(--muted)'};
+
+function renderProgress() {
+  const ct = document.getElementById('progress-list');
+  ct.innerHTML = '';
+  const cats = [...new Set(S.progress.map(r=>r.cat))];
+  cats.forEach(cat => {
+    const items = S.progress.filter(r=>r.cat===cat);
+    const col = PR_COL[cat]||'var(--muted)';
+    const hdr = document.createElement('div');
+    hdr.style.cssText = `font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:${col};text-transform:uppercase;margin:20px 0 8px;`;
+    hdr.textContent = '── '+cat+' ──';
+    ct.appendChild(hdr);
+    items.forEach(res => {
+      const ri = S.progress.findIndex(r=>r.id===res.id);
+      const done = res.done.length;
+      const pct = res.total ? Math.round(done/res.total*100) : 0;
+      const labels = res.labels&&res.labels.length ? res.labels : Array.from({length:res.total},(_,i)=>{
+        const p = {chapters:'Ch',lectures:'L',problems:'#',videos:'V'}[res.type]||'#';
+        return p+(i+1);
+      });
+      const card = document.createElement('div');
+      card.className = 'pr-card';
+      card.innerHTML = `
+        <div class="pr-header">
+          <div><div class="pr-name">${res.name}</div><div class="pr-sub">${res.type} · ${done}/${res.total} done</div></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="pr-pct" style="color:${col};">${pct}%</div>
+            <button class="btn sm" onclick="markAllPR('${res.id}',true)">All</button>
+            <button class="btn sm" onclick="markAllPR('${res.id}',false)">Clear</button>
+            <button class="del" onclick="delPR('${res.id}')">×</button>
+          </div>
+        </div>
+        <div class="bar-track" style="margin-bottom:10px;"><div class="bar-fill" style="width:${pct}%;background:${col};"></div></div>
+        <div class="pr-units">${labels.map((lbl,i)=>{
+          const d = res.done.includes(i);
+          return `<div class="pr-unit ${d?'done':''}" onclick="togglePR('${res.id}',${i})" style="${d?'border-color:'+col+';color:'+col+';background:'+col+'22;':''}">${lbl}</div>`;
+        }).join('')}</div>
+      `;
+      ct.appendChild(card);
+    });
+  });
+}
+
+function togglePR(id, idx) {
+  const ri = S.progress.findIndex(r=>r.id===id);
+  if (ri<0) return;
+  const pos = S.progress[ri].done.indexOf(idx);
+  if (pos>-1) S.progress[ri].done.splice(pos,1);
+  else S.progress[ri].done.push(idx);
+  save(); renderProgress();
+}
+
+function markAllPR(id, all) {
+  const ri = S.progress.findIndex(r=>r.id===id);
+  if (ri<0) return;
+  S.progress[ri].done = all ? Array.from({length:S.progress[ri].total},(_,i)=>i) : [];
+  save(); renderProgress();
+}
+
+function delPR(id) {
+  S.progress = S.progress.filter(r=>r.id!==id);
+  save(); renderProgress();
+}
+
+function addResource() {
+  const name = document.getElementById('pr-name').value.trim();
+  const total = parseInt(document.getElementById('pr-total').value)||0;
+  if (!name||!total) return;
+  const labelsRaw = document.getElementById('pr-labels').value.trim();
+  const labels = labelsRaw ? labelsRaw.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  S.progress.push({
+    id:'pr'+Date.now(), name, done:[],
+    type:document.getElementById('pr-type').value,
+    total, cat:document.getElementById('pr-cat').value, labels
+  });
+  document.getElementById('pr-name').value='';
+  document.getElementById('pr-total').value='';
+  document.getElementById('pr-labels').value='';
+  save(); renderProgress();
+}
+
+// ══════════════════════════════════════════════
+// BOOKS
+// ══════════════════════════════════════════════
+const BK_CATS = ['Math','Finance','Code','Strategy','ML','Other'];
+const BK_COL = {Math:'var(--accent3)',Finance:'var(--accent)',Code:'var(--accent2)',Strategy:'var(--yellow)',ML:'#ff69b4',Other:'var(--muted)'};
+
+function renderBooks() {
+  const ct = document.getElementById('books-list');
+  ct.innerHTML = '';
+  BK_CATS.forEach(cat => {
+    const items = S.books.filter(b=>b.cat===cat);
+    if (!items.length) return;
+    const col = BK_COL[cat]||'var(--muted)';
+    const done = items.filter(b=>b.status==='done').length;
+    const reading = items.filter(b=>b.status==='reading').length;
+    const sec = document.createElement('div');
+    sec.className = 'card';
+    sec.innerHTML = `<div class="card-title" style="color:${col};display:flex;justify-content:space-between;"><span>${cat}</span><span style="font-weight:400;">${done}/${items.length} done${reading?' · '+reading+' reading':''}</span></div>`;
+    items.forEach(book => {
+      const ri = S.books.findIndex(b=>b.id===book.id);
+      const sc = {todo:'var(--muted)',reading:'var(--yellow)',done:'var(--green)'};
+      const div = document.createElement('div');
+      div.className = 'book-row';
+      div.innerHTML = `
+        <div style="flex:1;">
+          <div class="book-title" style="${book.status==='done'?'text-decoration:line-through;color:var(--muted);':''}">${book.title}</div>
+          ${book.author?`<div class="book-author">${book.author}</div>`:''}
+        </div>
+        <select class="book-status-sel" style="border-color:${sc[book.status]};color:${sc[book.status]};">
+          <option value="todo" ${book.status==='todo'?'selected':''}>TO READ</option>
+          <option value="reading" ${book.status==='reading'?'selected':''}>READING</option>
+          <option value="done" ${book.status==='done'?'selected':''}>DONE</option>
+        </select>
+        <button class="del">×</button>
+      `;
+      div.querySelector('select').addEventListener('change', function() {
+        S.books[ri].status = this.value; save(); renderBooks();
+      });
+      div.querySelector('.del').addEventListener('click', () => {
+        S.books.splice(ri,1); save(); renderBooks();
+      });
+      sec.appendChild(div);
+    });
+    ct.appendChild(sec);
+  });
+}
+
+function addBook() {
+  const title = document.getElementById('bk-title').value.trim();
+  if (!title) return;
+  S.books.push({
+    id:'bk'+Date.now(), title,
+    author:document.getElementById('bk-author').value.trim(),
+    cat:document.getElementById('bk-cat').value,
+    status:document.getElementById('bk-status').value
+  });
+  document.getElementById('bk-title').value='';
+  document.getElementById('bk-author').value='';
+  save(); renderBooks();
+}
+
+// ══════════════════════════════════════════════
+// NOTES
+// ══════════════════════════════════════════════
+function renderNotes() {
+  const q = (document.getElementById('note-search')?.value||'').toLowerCase();
+  const ct = document.getElementById('notes-list');
+  ct.innerHTML = '';
+  const filtered = S.notes.filter(n=>(n.title+n.body).toLowerCase().includes(q));
+  if (!filtered.length) { ct.innerHTML='<div style="color:var(--muted);font-size:12px;padding:10px;">No notes yet.</div>'; return; }
+  filtered.forEach(note => {
+    const ri = S.notes.indexOf(note);
+    const card = document.createElement('div');
+    card.className = 'note-card';
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <input class="note-inp" value="${esc(note.title)}" placeholder="Title..." style="flex:1;">
+        <span style="font-size:9px;color:var(--muted);">${note.date}</span>
+        <button class="del">×</button>
+      </div>
+      <textarea class="note-ta">${esc(note.body)}</textarea>
+    `;
+    card.querySelector('input').addEventListener('input', function() { S.notes[ri].title=this.value; save(); });
+    card.querySelector('textarea').addEventListener('input', function() { S.notes[ri].body=this.value; save(); });
+    card.querySelector('.del').addEventListener('click', () => { S.notes.splice(ri,1); save(); renderNotes(); });
+    ct.appendChild(card);
+  });
+}
+
+function addNote() {
+  const d = new Date();
+  S.notes.unshift({id:'n'+Date.now(), title:'Note '+(S.notes.length+1), body:'', date:d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()});
+  save(); renderNotes();
+  document.querySelector('#notes-list .note-ta')?.focus();
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+
+// ══════════════════════════════════════════════
+// FITNESS
+// ══════════════════════════════════════════════
+
+// Common Indian foods database (per 100g unless noted)
+const FOOD_DB = [
+  {name:'White Rice (cooked)',cal:130,pro:2.7,carb:28,fat:0.3,unit:'g'},
+  {name:'Brown Rice (cooked)',cal:123,pro:2.6,carb:25,fat:1,unit:'g'},
+  {name:'Roti (1 piece ~30g)',cal:90,pro:3,carb:17,fat:1.5,unit:'piece',qty:30},
+  {name:'Dal (cooked, 1 cup)',cal:116,pro:9,carb:20,fat:0.4,unit:'cup',qty:200},
+  {name:'Chicken Breast (cooked)',cal:165,pro:31,carb:0,fat:3.6,unit:'g'},
+  {name:'Chicken Thigh (cooked)',cal:209,pro:26,carb:0,fat:11,unit:'g'},
+  {name:'Egg (whole, 1 large)',cal:72,pro:6,carb:0.4,fat:5,unit:'egg',qty:50},
+  {name:'Egg White (1 large)',cal:17,pro:3.6,carb:0.2,fat:0,unit:'white',qty:33},
+  {name:'Paneer (100g)',cal:265,pro:18,carb:3,fat:20,unit:'g'},
+  {name:'Milk (full fat, 1 glass)',cal:122,pro:8,carb:12,fat:5,unit:'glass',qty:250},
+  {name:'Milk (toned, 1 glass)',cal:90,pro:8,carb:12,fat:3,unit:'glass',qty:250},
+  {name:'Curd / Dahi (100g)',cal:61,pro:3.5,carb:4.7,fat:3.3,unit:'g'},
+  {name:'Greek Yogurt (100g)',cal:59,pro:10,carb:3.6,fat:0.4,unit:'g'},
+  {name:'Whey Protein (1 scoop ~30g)',cal:120,pro:25,carb:3,fat:1.5,unit:'scoop',qty:30},
+  {name:'Oats (dry, 100g)',cal:389,pro:17,carb:66,fat:7,unit:'g'},
+  {name:'Banana (1 medium)',cal:89,pro:1.1,carb:23,fat:0.3,unit:'banana',qty:120},
+  {name:'Apple (1 medium)',cal:52,pro:0.3,carb:14,fat:0.2,unit:'apple',qty:150},
+  {name:'Peanut Butter (1 tbsp)',cal:94,pro:4,carb:3,fat:8,unit:'tbsp',qty:16},
+  {name:'Almonds (1 handful ~28g)',cal:164,pro:6,carb:6,fat:14,unit:'handful',qty:28},
+  {name:'Tuna (canned, 100g)',cal:116,pro:26,carb:0,fat:1,unit:'g'},
+  {name:'Salmon (cooked, 100g)',cal:208,pro:20,carb:0,fat:13,unit:'g'},
+  {name:'Potato (boiled, 100g)',cal:87,pro:1.9,carb:20,fat:0.1,unit:'g'},
+  {name:'Sweet Potato (100g)',cal:86,pro:1.6,carb:20,fat:0.1,unit:'g'},
+  {name:'Bread (1 slice white)',cal:79,pro:2.7,carb:15,fat:1,unit:'slice',qty:30},
+  {name:'Rajma (cooked, 1 cup)',cal:127,pro:8.7,carb:22,fat:0.5,unit:'cup',qty:200},
+  {name:'Chana / Chickpea (cooked)',cal:164,pro:9,carb:27,fat:2.6,unit:'g'},
+  {name:'Moong Dal (cooked)',cal:105,pro:7,carb:19,fat:0.4,unit:'g'},
+  {name:'Samosa (1 piece)',cal:262,pro:4,carb:27,fat:16,unit:'piece',qty:90},
+  {name:'Idli (1 piece)',cal:39,pro:2,carb:8,fat:0.2,unit:'piece',qty:40},
+  {name:'Dosa (1 plain)',cal:133,pro:3.5,carb:25,fat:2,unit:'dosa',qty:80},
+  {name:'Upma (1 serving)',cal:190,pro:4,carb:30,fat:6,unit:'serving',qty:150},
+  {name:'Poha (1 serving)',cal:250,pro:4,carb:48,fat:4,unit:'serving',qty:150},
+  {name:'Chole Bhature (1 plate)',cal:520,pro:14,carb:75,fat:18,unit:'plate',qty:300},
+  {name:'Butter (1 tsp)',cal:34,pro:0,carb:0,fat:3.8,unit:'tsp',qty:5},
+  {name:'Ghee (1 tsp)',cal:45,pro:0,carb:0,fat:5,unit:'tsp',qty:5},
+  {name:'Olive Oil (1 tbsp)',cal:119,pro:0,carb:0,fat:13.5,unit:'tbsp',qty:14},
+  {name:'Spinach (100g)',cal:23,pro:2.9,carb:3.6,fat:0.4,unit:'g'},
+  {name:'Broccoli (100g)',cal:34,pro:2.8,carb:7,fat:0.4,unit:'g'},
+  {name:'Orange (1 medium)',cal:62,pro:1.2,carb:15,fat:0.2,unit:'orange',qty:130},
+  {name:'Mango (1 medium)',cal:202,pro:2.8,carb:50,fat:1.3,unit:'mango',qty:200},
+];
+
+const MONTH_GOALS = [
+  {month:'Month 1',title:'Foundation',cal:3000,pro:160,goals:['Establish training consistency — no missed sessions','Hit protein target 6/7 days','Establish sleep 7.5–8hrs','Body weight: maintain or slight gain','Focus: form perfection on big lifts']},
+  {month:'Month 2',title:'Build Momentum',cal:3000,pro:165,goals:['Increase all lifts by 5–10%','Add 2kg to deadlift and squat','Arms visibly fuller','Nutrition: meal prep 2 days/week','Ironman training: swimming technique focus']},
+  {month:'Month 3',title:'First Visible Changes',cal:3100,pro:165,goals:['Chest separation starting to show','Back width noticeably improved','Target: 120kg+ deadlift maintained','Core work: planks + cable crunches daily','Body fat: slight drop from initial']},
+  {month:'Month 4',title:'Strength Peak',cal:3100,pro:170,goals:['Bench press: target 90kg+','Squat: 100kg+','Shoulder caps visible','Vascularity starting in arms','Ironman: cycling endurance 60km+']},
+  {month:'Month 5',title:'Size and Conditioning',cal:3000,pro:170,goals:['Start slight calorie adjustment (-200 cal)','Abs becoming visible in good lighting','Arms: 14–15 inch+ measurement','Upper chest filling in','Maintain strength while leaning slightly']},
+  {month:'Month 6',title:'Halfway Check',cal:2800,pro:175,goals:['Body fat visibly lower','Visible abs in normal lighting target','Jaw definition improving','Review — adjust calories based on progress','Ironman: half-distance simulation']},
+  {month:'Month 7',title:'Lean Phase Begins',cal:2600,pro:180,goals:['Full cut begins — 2600 cal','Protein up to protect muscle','Cardio: increase by 20 mins/day','All major muscle groups visibly developed','Face leaning out significantly']},
+  {month:'Month 8',title:'Cut Deepens',cal:2500,pro:180,goals:['6-pack visible in most lighting','Veins appearing in forearms','Weight should drop 0.5kg/week','Maintain all major lifts within 10%','Energy management: carb cycling']},
+  {month:'Month 9',title:'Peak Conditioning',cal:2400,pro:185,goals:['Target: 9–11% body fat','Full 6-pack definition','Chest, back, shoulders all highly developed','Face: strong jaw definition visible','Ironman: full distance training blocks']},
+  {month:'Month 10',title:'Maintain and Refine',cal:2600,pro:175,goals:['Reverse diet slowly (add 100 cal/week)','Maintain leanness while recovering strength','Perfect your physique weak points','Photos — compare with Month 1','Ironman race preparation']},
+  {month:'Month 11',title:'Strength Regain',cal:2800,pro:170,goals:['Back to strength focus','Maintain body fat 10–12%','Add muscle to weak points','Ironman taper if race nearby','Looking like 8.5–9/10 at this point']},
+  {month:'Month 12',title:'Target Achieved',cal:3000,pro:165,goals:['Complete lean bulk at new baseline','Significantly more muscular than Month 1','6-pack visible, strong jaw, full chest','Ironman race performance','You look like the goal image. Keep going.']},
+];
+
+function initFitness() {
+  if (!S.food_log) S.food_log = {};
+  if (!S.workout_log) S.workout_log = {};
+  if (!S.body_stats) S.body_stats = [];
+  if (!S.prs) S.prs = {};
+  if (!S.sessions) S.sessions = [];
+  if (!S.wlog_filter) S.wlog_filter = "All";
+}
+
+function renderFitness() {
+  initFitness();
+  const today = tk();
+  document.getElementById('fit-date-label').textContent = new Date().toDateString();
+
+  // month goals
+  const mg = document.getElementById('month-goals-grid');
+  mg.innerHTML = '';
+  const now = new Date();
+  const startDate = new Date('2026-05-26');
+  const monthsIn = Math.max(0, Math.floor((now - startDate) / (30.44 * 86400000)));
+
+  MONTH_GOALS.forEach((m, i) => {
+    const isCurrent = i === monthsIn;
+    const isPast = i < monthsIn;
+    const div = document.createElement('div');
+    div.style.cssText = `background:var(--surface);border:1px solid ${isCurrent?'var(--accent2)':isPast?'var(--muted2)':'var(--border)'};padding:12px;`;
+    div.innerHTML = `
+      <div style="font-family:'Space Mono',monospace;font-size:9px;color:${isCurrent?'var(--accent2)':isPast?'var(--muted)':'var(--muted)'};letter-spacing:2px;margin-bottom:4px;">${m.month}${isCurrent?' ◀ NOW':isPast?' ✓':''}</div>
+      <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:${isCurrent?'var(--text)':'var(--muted)'};">${m.title}</div>
+      <div style="font-size:9px;color:var(--muted);margin-bottom:6px;">🔥 ${m.cal} cal · 💪 ${m.pro}g protein</div>
+      ${m.goals.map(g=>`<div style="font-size:10px;color:${isCurrent?'#ccc':'var(--muted)'};padding:2px 0 2px 10px;position:relative;line-height:1.4;"><span style="position:absolute;left:0;color:${isCurrent?'var(--accent2)':'var(--muted2)'};">›</span>${g}</div>`).join('')}
+    `;
+    mg.appendChild(div);
+  });
+
+  renderMacroRings(today);
+  renderFoodLog(today);
+  renderWeeklyProtein();
+  renderBodyStats();
+
+  // workout
+  const wl = S.workout_log[today];
+  document.getElementById('workout-logged').textContent = wl?.type ? 'Logged: ' + wl.type : 'No workout logged yet';
+  document.getElementById('workout-notes').value = wl?.notes || '';
+  if (wl?.type) {
+    document.querySelectorAll('#workout-type-btns .btn').forEach(b => {
+      b.style.borderColor = b.textContent === wl.type ? 'var(--accent)' : 'var(--border)';
+      b.style.color = b.textContent === wl.type ? 'var(--accent)' : 'var(--text)';
+    });
+  }
+}
+
+function renderMacroRings(today) {
+  const log = S.food_log[today] || [];
+  const totals = log.reduce((a, f) => ({cal:a.cal+f.cal, pro:a.pro+f.pro, carb:a.carb+f.carb, fat:a.fat+f.fat}), {cal:0,pro:0,carb:0,fat:0});
+  const targets = {cal:3000, pro:165, carb:350, fat:70};
+  const cols = {cal:'var(--accent2)',pro:'#ff69b4',carb:'var(--accent3)',fat:'var(--yellow)'};
+  const labels = {cal:'Calories',pro:'Protein',carb:'Carbs',fat:'Fat'};
+  const units = {cal:'kcal',pro:'g',carb:'g',fat:'g'};
+  const ct = document.getElementById('macro-rings');
+  ct.innerHTML = '';
+  ['cal','pro','carb','fat'].forEach(k => {
+    const pct = Math.min(100, Math.round(totals[k]/targets[k]*100));
+    const col = cols[k];
+    const circ = 100.5;
+    const offset = circ - (pct/100)*circ;
+    ct.innerHTML += `
+      <div style="text-align:center;">
+        <svg width="60" height="60" viewBox="0 0 36 36" style="transform:rotate(-90deg);">
+          <circle cx="18" cy="18" r="16" fill="none" stroke="var(--muted2)" stroke-width="3"/>
+          <circle cx="18" cy="18" r="16" fill="none" stroke="${col}" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="${circ}" stroke-dashoffset="${offset}" style="transition:stroke-dashoffset .4s;"/>
+        </svg>
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:${col};margin-top:-4px;">${Math.round(totals[k])}</div>
+        <div style="font-size:8px;color:var(--muted);">${labels[k]}</div>
+        <div style="font-size:8px;color:var(--muted);">${units[k]} / ${targets[k]}</div>
+      </div>`;
+  });
+}
+
+function searchFood() {
+  const q = document.getElementById('food-search-inp').value.trim().toLowerCase();
+  if (!q) return;
+  const results = FOOD_DB.filter(f => f.name.toLowerCase().includes(q)).slice(0, 6);
+  const ct = document.getElementById('food-search-results');
+  if (!results.length) { ct.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:6px 0;">No results. Use manual add below.</div>'; return; }
+  ct.innerHTML = '<div style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:6px;">RESULTS (click to add):</div>';
+  results.forEach(food => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);margin-bottom:4px;cursor:pointer;transition:border-color .2s;';
+    div.innerHTML = `
+      <div style="flex:1;">
+        <div style="font-size:12px;">${food.name}</div>
+        <div style="font-size:10px;color:var(--muted);">per ${food.qty||100}${food.unit==='g'?'g':food.unit==='ml'?'ml':' '+food.unit} · ${food.cal}kcal · P:${food.pro}g · C:${food.carb}g · F:${food.fat}g</div>
+      </div>
+      <input type="number" value="${food.qty||100}" style="background:var(--card);border:1px solid var(--border);color:var(--text);font-size:11px;padding:4px 6px;width:70px;outline:none;" onclick="event.stopPropagation()" placeholder="qty">
+      <button class="btn sm" style="white-space:nowrap;">+ Add</button>
+    `;
+    div.querySelector('button').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const qty = parseFloat(div.querySelector('input').value) || (food.qty||100);
+      const scale = qty / (food.qty||100);
+      addFoodToLog({
+        name: food.name + (qty !== (food.qty||100) ? ' ('+qty+(food.unit==='g'?'g':'')+ ')' : ''),
+        cal: Math.round(food.cal * scale),
+        pro: Math.round(food.pro * scale * 10)/10,
+        carb: Math.round(food.carb * scale * 10)/10,
+        fat: Math.round(food.fat * scale * 10)/10,
+      });
+      ct.innerHTML = '';
+      document.getElementById('food-search-inp').value = '';
+    });
+    ct.appendChild(div);
+  });
+}
+
+function addFoodManual() {
+  const name = document.getElementById('food-name').value.trim();
+  const cal = parseFloat(document.getElementById('food-cal').value)||0;
+  const pro = parseFloat(document.getElementById('food-pro').value)||0;
+  const carb = parseFloat(document.getElementById('food-carb').value)||0;
+  const fat = parseFloat(document.getElementById('food-fat').value)||0;
+  if (!name||!cal) return;
+  addFoodToLog({name, cal, pro, carb, fat});
+  ['food-name','food-cal','food-pro','food-carb','food-fat'].forEach(id => document.getElementById(id).value='');
+}
+
+function addFoodToLog(item) {
+  const today = tk();
+  if (!S.food_log[today]) S.food_log[today] = [];
+  S.food_log[today].push({...item, id:'f'+Date.now()});
+  save(); renderFoodLog(today); renderMacroRings(today); renderWeeklyProtein();
+}
+
+function renderFoodLog(today) {
+  const log = S.food_log[today] || [];
+  const ct = document.getElementById('food-log-list');
+  ct.innerHTML = '';
+  if (!log.length) { ct.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:8px 0;">No food logged yet today.</div>'; return; }
+  const total = log.reduce((a,f)=>({cal:a.cal+f.cal,pro:a.pro+f.pro,carb:a.carb+f.carb,fat:a.fat+f.fat}),{cal:0,pro:0,carb:0,fat:0});
+  log.forEach((f, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface);border:1px solid var(--border);margin-bottom:4px;';
+    div.innerHTML = `
+      <div style="flex:1;font-size:11px;">${f.name}</div>
+      <span style="font-size:10px;color:var(--accent2);">${f.cal}cal</span>
+      <span style="font-size:10px;color:#ff69b4;">P:${f.pro}g</span>
+      <span style="font-size:10px;color:var(--accent3);">C:${f.carb}g</span>
+      <span style="font-size:10px;color:var(--yellow);">F:${f.fat}g</span>
+      <button class="del" onclick="delFood('${today}',${i})">×</button>
+    `;
+    ct.appendChild(div);
+  });
+  const totDiv = document.createElement('div');
+  totDiv.style.cssText = 'display:flex;gap:12px;padding:8px 10px;background:rgba(255,107,53,.08);border:1px solid var(--accent2);margin-top:4px;flex-wrap:wrap;';
+  totDiv.innerHTML = `
+    <span style="font-size:10px;font-family:'Space Mono',monospace;color:var(--muted);">TOTAL:</span>
+    <span style="font-size:10px;color:var(--accent2);">🔥 ${Math.round(total.cal)} kcal</span>
+    <span style="font-size:10px;color:#ff69b4;">💪 ${total.pro.toFixed(1)}g protein</span>
+    <span style="font-size:10px;color:var(--accent3);">🍚 ${total.carb.toFixed(1)}g carbs</span>
+    <span style="font-size:10px;color:var(--yellow);">🧈 ${total.fat.toFixed(1)}g fat</span>
+  `;
+  ct.appendChild(totDiv);
+}
+
+function delFood(dateKey, idx) {
+  S.food_log[dateKey].splice(idx, 1);
+  save(); renderFoodLog(dateKey); renderMacroRings(dateKey);
+}
+
+function renderWeeklyProtein() {
+  const ct = document.getElementById('weekly-protein');
+  ct.innerHTML = '';
+  for (let d=6;d>=0;d--) {
+    const date = new Date(); date.setDate(date.getDate()-d);
+    const key = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+    const log = S.food_log[key] || [];
+    const pro = log.reduce((a,f)=>a+f.pro, 0);
+    const pct = Math.min(100, Math.round(pro/165*100));
+    const isToday = d===0;
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const div = document.createElement('div');
+    div.style.marginBottom = '6px';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:3px;">
+        <span style="color:${isToday?'var(--accent)':'var(--muted)'};">${isToday?'Today':days[date.getDay()]}</span>
+        <span style="color:${pro>=165?'var(--green)':pro>=120?'var(--yellow)':'var(--muted)'};">${pro.toFixed(0)}g / 165g</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${pro>=165?'var(--green)':pro>=120?'var(--yellow)':'#ff69b4'};"></div></div>
+    `;
+    ct.appendChild(div);
+  }
+}
+
+function setWorkout(type, btn) {
+  const today = tk();
+  if (!S.workout_log[today]) S.workout_log[today] = {};
+  S.workout_log[today].type = type;
+  document.getElementById('workout-logged').textContent = 'Logged: ' + type;
+  document.querySelectorAll('#workout-type-btns .btn').forEach(b => {
+    b.style.borderColor = 'var(--border)'; b.style.color = 'var(--text)';
+  });
+  btn.style.borderColor = 'var(--accent)'; btn.style.color = 'var(--accent)';
+  save();
+}
+
+function saveWorkoutNotes() {
+  const today = tk();
+  if (!S.workout_log[today]) S.workout_log[today] = {};
+  S.workout_log[today].notes = document.getElementById('workout-notes').value;
+  save();
+}
+
+function logBodyStats() {
+  const w = parseFloat(document.getElementById('bs-weight').value);
+  const bf = parseFloat(document.getElementById('bs-bf').value);
+  if (!w && !bf) return;
+  const today = tk();
+  S.body_stats.unshift({date:today, weight:w||null, bf:bf||null});
+  S.body_stats = S.body_stats.slice(0,30); // keep last 30
+  document.getElementById('bs-weight').value='';
+  document.getElementById('bs-bf').value='';
+  save(); renderBodyStats();
+}
+
+function renderBodyStats() {
+  const ct = document.getElementById('body-stats-list');
+  ct.innerHTML = '';
+  if (!S.body_stats.length) { ct.innerHTML = '<div style="font-size:11px;color:var(--muted);">No stats logged yet.</div>'; return; }
+  S.body_stats.slice(0, 7).forEach((s, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;gap:12px;padding:6px 10px;background:var(--surface);border:1px solid var(--border);margin-bottom:4px;align-items:center;';
+    div.innerHTML = `
+      <span style="font-size:10px;color:var(--muted);flex:1;">${s.date}</span>
+      ${s.weight?`<span style="font-size:11px;color:var(--accent);">${s.weight} kg</span>`:''}
+      ${s.bf?`<span style="font-size:11px;color:var(--accent2);">${s.bf}% BF</span>`:''}
+      <button class="del" onclick="delBodyStat(${i})">×</button>
+    `;
+    ct.appendChild(div);
+  });
+}
+
+function delBodyStat(i) { S.body_stats.splice(i,1); save(); renderBodyStats(); }
+
+async function rateWorkout() {
+  const type = S.workout_log[tk()]?.type || 'General';
+  const notes = document.getElementById('workout-notes').value.trim();
+  const resultEl = document.getElementById('workout-rating-result');
+
+  if (!notes) {
+    resultEl.innerHTML = '<div style="font-size:12px;color:var(--accent2);padding:10px;background:var(--surface);border:1px solid var(--accent2);">Describe your workout first — sets, reps, weights, exercises.</div>';
+    return;
+  }
+
+  resultEl.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:10px;background:var(--surface);border:1px solid var(--border);animation:pulse 1s ease-in-out infinite;">⚡ Analysing your workout...</div>';
+
+  const prompt = `You are an expert fitness coach specialising in physique development and Ironman triathlon training. 
+
+The user is Pakshit, a 19-year-old male training for:
+1. An impressive physique (goal: shredded, muscular, ~9-10% body fat)
+2. Ironman triathlon (2027 goal race)
+3. Currently on a lean bulk (3000 cal/day, 165g protein)
+4. Training split: Push/Pull/Legs + cycling/running/swimming + Sunday brick sessions
+5. Has a 120kg deadlift PR
+
+Today's session type: ${type}
+Workout logged: ${notes}
+
+Rate this workout out of 10 and give specific feedback. Be direct and blunt like a good coach — no fluff.
+
+Respond in this exact JSON format only, no markdown, no extra text:
+{
+  "score": 7,
+  "headline": "Solid push day but volume is low",
+  "positives": ["Good compound movement priority", "Progressive overload evident"],
+  "improvements": ["Add 1 more chest isolation", "Increase shoulder volume"],
+  "adjusted_workout": "Bench 4x8 @80kg → Incline DB 3x10 @24kg → Cable Fly 3x15 → OHP 4x10 @50kg → Lateral raises 4x15 → Tricep pushdown 3x15",
+  "note": "For your Ironman prep, consider keeping push sessions under 75 mins to preserve energy for endurance training."
+}`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{role: 'user', content: prompt}]
+      })
+    });
+    const data = await response.json();
+    const raw = data.content?.[0]?.text || '';
+    let result;
+    try {
+      const clean = raw.replace(/```json|```/g,'').trim();
+      result = JSON.parse(clean);
+    } catch(e) {
+      resultEl.innerHTML = `<div style="font-size:12px;color:var(--muted);padding:10px;background:var(--surface);border:1px solid var(--border);">${raw}</div>`;
+      return;
+    }
+
+    const scoreCol = result.score>=8?'var(--green)':result.score>=6?'var(--yellow)':'var(--accent2)';
+    resultEl.innerHTML = `
+      <div style="background:var(--card);border:1px solid ${scoreCol};padding:16px;">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
+          <div style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:${scoreCol};line-height:1;">${result.score}<span style="font-size:20px;color:var(--muted);">/10</span></div>
+          <div>
+            <div style="font-size:14px;font-weight:700;">${result.headline}</div>
+            <div style="font-size:9px;color:var(--muted);letter-spacing:2px;margin-top:2px;">AI WORKOUT RATING</div>
+          </div>
+        </div>
+
+        <div class="g2" style="gap:10px;margin-bottom:12px;">
+          <div style="background:var(--surface);padding:12px;border:1px solid var(--border);">
+            <div style="font-size:9px;color:var(--green);letter-spacing:2px;margin-bottom:8px;">✓ WHAT YOU DID WELL</div>
+            ${(result.positives||[]).map(p=>`<div style="font-size:11px;color:#ccc;padding:3px 0 3px 12px;position:relative;"><span style="position:absolute;left:0;color:var(--green);">›</span>${p}</div>`).join('')}
+          </div>
+          <div style="background:var(--surface);padding:12px;border:1px solid var(--border);">
+            <div style="font-size:9px;color:var(--accent2);letter-spacing:2px;margin-bottom:8px;">⚡ IMPROVEMENTS</div>
+            ${(result.improvements||[]).map(p=>`<div style="font-size:11px;color:#ccc;padding:3px 0 3px 12px;position:relative;"><span style="position:absolute;left:0;color:var(--accent2);">›</span>${p}</div>`).join('')}
+          </div>
+        </div>
+
+        ${result.adjusted_workout?`
+        <div style="background:var(--surface);padding:12px;border:1px solid var(--accent3);margin-bottom:10px;">
+          <div style="font-size:9px;color:var(--accent3);letter-spacing:2px;margin-bottom:6px;">⚙ SUGGESTED WORKOUT</div>
+          <div style="font-size:12px;color:var(--text);line-height:1.8;">${result.adjusted_workout}</div>
+        </div>`:''}
+
+        ${result.note?`<div style="font-size:11px;color:var(--muted);padding:10px;border-left:2px solid var(--accent3);">${result.note}</div>`:''}
+      </div>
+    `;
+  } catch(e) {
+    resultEl.innerHTML = '<div style="font-size:12px;color:var(--accent2);padding:10px;background:var(--surface);border:1px solid var(--accent2);">Error connecting to AI. Try again.</div>';
+  }
+}
+
+
+// ══════════════════════════════════════════════
+// PR TRACKER
+// ══════════════════════════════════════════════
+const PR_CATEGORIES = {
+  'Compound Lifts': ['Deadlift','Back Squat','Bench Press','Overhead Press','Barbell Row'],
+  'Accessory': ['Pull-ups','Incline Bench Press','Romanian Deadlift','Hip Thrust','Dumbbell Press','Lateral Raises','Bicep Curl','Tricep Pushdown','Cable Row','Leg Press'],
+  'Endurance': ['Running 5K','Running 10K','Cycling 40K','Swimming 1.9K','Ironman 70.3','Full Ironman'],
+};
+
+function addPR() {
+  const exercise = document.getElementById('pr-exercise').value.trim();
+  const weight = parseFloat(document.getElementById('pr-weight').value);
+  const reps = parseInt(document.getElementById('pr-reps').value)||1;
+  const date = document.getElementById('pr-date').value || tk();
+  const notes = document.getElementById('pr-notes').value.trim();
+  if (!exercise || !weight) return;
+
+  if (!S.prs[exercise]) S.prs[exercise] = [];
+  S.prs[exercise].push({weight, reps, date, notes, id:'pr'+Date.now()});
+  S.prs[exercise].sort((a,b) => new Date(b.date)-new Date(a.date));
+
+  document.getElementById('pr-exercise').value='';
+  document.getElementById('pr-weight').value='';
+  document.getElementById('pr-reps').value='';
+  document.getElementById('pr-notes').value='';
+  document.getElementById('pr-date').value='';
+  save(); renderPRs();
+}
+
+function renderPRs() {
+  const ct = document.getElementById('pr-list');
+  ct.innerHTML = '';
+  const allExercises = Object.keys(S.prs);
+  if (!allExercises.length) {
+    ct.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:16px;">No PRs logged yet. Add your first one above.</div>';
+    return;
+  }
+
+  // Group by category
+  const grouped = {};
+  allExercises.forEach(ex => {
+    let cat = 'Other';
+    for (const [c, exercises] of Object.entries(PR_CATEGORIES)) {
+      if (exercises.includes(ex)) { cat = c; break; }
+    }
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(ex);
+  });
+
+  const catColors = {'Compound Lifts':'var(--accent2)','Accessory':'var(--accent3)','Endurance':'var(--green)','Other':'var(--muted)'};
+
+  Object.entries(grouped).forEach(([cat, exercises]) => {
+    const col = catColors[cat]||'var(--muted)';
+    const hdr = document.createElement('div');
+    hdr.style.cssText = `font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:${col};text-transform:uppercase;margin:20px 0 10px;`;
+    hdr.textContent = '── '+cat+' ──';
+    ct.appendChild(hdr);
+
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;';
+
+    exercises.forEach(ex => {
+      const records = S.prs[ex];
+      if (!records.length) return;
+      const best = [...records].sort((a,b)=>b.weight-a.weight)[0];
+      const recent = records[0];
+
+      const card = document.createElement('div');
+      card.style.cssText = `background:var(--card);border:1px solid var(--border);padding:16px;`;
+      card.innerHTML = `
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <div style="font-size:13px;font-weight:700;">${ex}</div>
+            <div style="font-size:9px;color:var(--muted);margin-top:2px;">${records.length} entries</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:${col};line-height:1;">${best.weight}<span style="font-size:12px;color:var(--muted);">kg</span></div>
+            <div style="font-size:9px;color:var(--muted);">${best.reps>1?'x'+best.reps+' reps':''} BEST</div>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:10px;">
+          ${records.slice(0,5).map((r,i) => `
+            <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--muted2);">
+              <span style="font-size:9px;color:var(--muted);min-width:70px;">${r.date}</span>
+              <span style="font-size:12px;color:${i===0&&r.weight===best.weight?col:'var(--text)'};">${r.weight}kg${r.reps>1?' x'+r.reps:''}</span>
+              ${r.notes?`<span style="font-size:10px;color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.notes}</span>`:'<span style="flex:1;"></span>'}
+              ${i===0&&r.weight===best.weight?`<span style="font-size:9px;padding:1px 6px;border:1px solid ${col};color:${col};">PR</span>`:''}
+              <button class="del" onclick="delPR('${ex}',${i})">×</button>
+            </div>`).join('')}
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    ct.appendChild(grid);
+  });
+}
+
+function delPR(exercise, idx) {
+  S.prs[exercise].splice(idx,1);
+  if (!S.prs[exercise].length) delete S.prs[exercise];
+  save(); renderPRs();
+}
+
+// ══════════════════════════════════════════════
+// WORKOUT LOGGER
+// ══════════════════════════════════════════════
+let wlogFilter = 'All';
+let exerciseRows = 0;
+
+function startNewSession() {
+  document.getElementById('new-session-form').style.display='block';
+  document.getElementById('ws-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('ws-exercises').innerHTML='';
+  exerciseRows = 0;
+  addExerciseRow(); addExerciseRow(); addExerciseRow();
+  document.getElementById('new-session-form').scrollIntoView({behavior:'smooth'});
+}
+
+function cancelSession() {
+  document.getElementById('new-session-form').style.display='none';
+}
+
+function addExerciseRow() {
+  const ct = document.getElementById('ws-exercises');
+  const id = exerciseRows++;
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:6px;margin-bottom:6px;align-items:center;flex-wrap:wrap;';
+  div.id = 'ex-row-'+id;
+  div.innerHTML = `
+    <input class="inp" placeholder="Exercise" style="flex:2;min-width:140px;" id="ex-name-${id}">
+    <input class="inp" type="number" placeholder="Sets" style="max-width:65px;" id="ex-sets-${id}">
+    <input class="inp" type="number" placeholder="Reps" style="max-width:65px;" id="ex-reps-${id}">
+    <input class="inp" type="number" placeholder="kg" style="max-width:70px;" id="ex-weight-${id}" step="0.5">
+    <input class="inp" placeholder="Notes" style="flex:1;min-width:80px;" id="ex-note-${id}">
+    <button class="del" onclick="document.getElementById('ex-row-${id}').remove()">×</button>
+  `;
+  ct.appendChild(div);
+}
+
+function saveSession() {
+  const date = document.getElementById('ws-date').value || tk();
+  const type = document.getElementById('ws-type').value;
+  const duration = parseInt(document.getElementById('ws-duration').value)||0;
+  const notes = document.getElementById('ws-notes').value.trim();
+  const feel = parseInt(document.getElementById('ws-feel').value);
+
+  const exercises = [];
+  for (let i=0;i<exerciseRows;i++) {
+    const nameEl = document.getElementById('ex-name-'+i);
+    if (!nameEl) continue;
+    const name = nameEl.value.trim();
+    if (!name) continue;
+    exercises.push({
+      name,
+      sets: parseInt(document.getElementById('ex-sets-'+i)?.value)||0,
+      reps: parseInt(document.getElementById('ex-reps-'+i)?.value)||0,
+      weight: parseFloat(document.getElementById('ex-weight-'+i)?.value)||0,
+      note: document.getElementById('ex-note-'+i)?.value.trim()||'',
+    });
+  }
+
+  S.sessions.unshift({
+    id:'s'+Date.now(), date, type, duration, notes, feel, exercises,
+  });
+
+  document.getElementById('new-session-form').style.display='none';
+  document.getElementById('ws-notes').value='';
+  save(); renderWlog();
+}
+
+function setWlogFilter(f, btn) {
+  wlogFilter = f;
+  document.querySelectorAll('#wlog-filters .btn').forEach(b=>{ b.style.borderColor='var(--border)'; b.style.color='var(--muted)'; });
+  btn.style.borderColor='var(--accent)'; btn.style.color='var(--accent)';
+  renderWlog();
+}
+
+function renderWlog() {
+  // Stats
+  const statsEl = document.getElementById('wlog-stats');
+  const total = S.sessions.length;
+  const thisWeek = S.sessions.filter(s=>{ const d=new Date(s.date); const now=new Date(); return (now-d)/(86400000)<=7; }).length;
+  const totalMins = S.sessions.reduce((a,s)=>a+(s.duration||0),0);
+  const byType = {};
+  S.sessions.forEach(s=>{ byType[s.type]=(byType[s.type]||0)+1; });
+  const mostCommon = Object.entries(byType).sort((a,b)=>b[1]-a[1])[0];
+  statsEl.innerHTML = `
+    <div class="stat-box"><div class="stat-lbl">Total Sessions</div><div class="stat-val">${total}</div></div>
+    <div class="stat-box"><div class="stat-lbl">This Week</div><div class="stat-val orange">${thisWeek}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Total Hours</div><div class="stat-val purple">${(totalMins/60).toFixed(1)}</div></div>
+    <div class="stat-box"><div class="stat-lbl">Top Session</div><div class="stat-val yellow" style="font-size:16px;">${mostCommon?mostCommon[0]:'—'}</div></div>
+  `;
+
+  // List
+  const ct = document.getElementById('wlog-list');
+  ct.innerHTML = '';
+  let sessions = wlogFilter==='All' ? S.sessions : S.sessions.filter(s=>s.type===wlogFilter);
+
+  if (!sessions.length) {
+    ct.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:16px;">No sessions logged yet. Hit "+ New Session" to start.</div>';
+    return;
+  }
+
+  const feelEmoji = {5:'💪',4:'😤',3:'😐',2:'😩',1:'💀'};
+  const typeColors = {Push:'var(--accent2)',Pull:'var(--accent3)',Legs:'var(--green)',Upper:'var(--accent)',Cycling:'var(--yellow)',Running:'#ff69b4',Swimming:'#00bcd4',Brick:'var(--accent2)',Rest:'var(--muted)'};
+
+  sessions.forEach(session => {
+    const col = typeColors[session.type]||'var(--muted)';
+    const card = document.createElement('div');
+    card.style.cssText = `background:var(--card);border:1px solid var(--border);border-left:3px solid ${col};padding:16px;margin-bottom:10px;`;
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);">${session.date}</span>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;border:1px solid ${col};color:${col};">${session.type}</span>
+        ${session.duration?`<span style="font-size:10px;color:var(--muted);">⏱ ${session.duration} mins</span>`:''}
+        <span style="font-size:14px;">${feelEmoji[session.feel]||''}</span>
+        <button class="del" onclick="delSession('${session.id}')" style="margin-left:auto;">×</button>
+      </div>
+      ${session.exercises.length?`
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:10px;">
+        ${session.exercises.map(ex=>`
+          <div style="display:flex;align-items:center;gap:10px;padding:5px 8px;background:var(--surface);border:1px solid var(--border);">
+            <span style="font-size:12px;flex:1;">${ex.name}</span>
+            ${ex.sets?`<span style="font-size:10px;color:var(--muted);">${ex.sets}×${ex.reps}</span>`:''}
+            ${ex.weight?`<span style="font-size:11px;color:${col};">${ex.weight}kg</span>`:''}
+            ${ex.note?`<span style="font-size:10px;color:var(--muted);font-style:italic;">${ex.note}</span>`:''}
+          </div>`).join('')}
+      </div>`:''}
+      ${session.notes?`<div style="font-size:11px;color:var(--muted);padding:8px;border-left:2px solid var(--muted2);">${session.notes}</div>`:''}
+    `;
+    ct.appendChild(card);
+  });
+}
+
+function delSession(id) {
+  S.sessions = S.sessions.filter(s=>s.id!==id);
+  save(); renderWlog();
+}
+
+
+// ══════════════════════════════════════════════
+// FULL CALENDAR PAGE
+// ══════════════════════════════════════════════
+let calFilter = 'all';
+const EVT_ICONS = {deadline:'📅',exam:'📝',contest:'⚡',reminder:'🔔',goal:'🎯',other:'📌'};
+
+function calToday() {
+  S.cal_y = new Date().getFullYear();
+  S.cal_m = new Date().getMonth();
+  save();
+}
+
+function renderCalPage() {
+  if (!S.cal_y) { S.cal_y = new Date().getFullYear(); S.cal_m = new Date().getMonth(); }
+  if (!S.cal_events) S.cal_events = {};
+
+  // Set default date for new event input
+  const todayIso = new Date().toISOString().split('T')[0];
+  const newDateInp = document.getElementById('cal-new-date');
+  if (newDateInp && !newDateInp.value) newDateInp.value = todayIso;
+
+  // Header label
+  document.getElementById('cal-full-label').textContent = MONTHS[S.cal_m] + ' ' + S.cal_y;
+
+  // Build full calendar grid
+  const grid = document.getElementById('cal-full-grid');
+  grid.innerHTML = '';
+  const today = new Date(); today.setHours(0,0,0,0);
+  const first = new Date(S.cal_y, S.cal_m, 1).getDay();
+  const dim = new Date(S.cal_y, S.cal_m+1, 0).getDate();
+  const prevDim = new Date(S.cal_y, S.cal_m, 0).getDate();
+
+  // Prev month ghost days
+  for (let i = first - 1; i >= 0; i--) {
+    const cell = document.createElement('div');
+    cell.style.cssText = 'min-height:80px;padding:6px;border:1px solid var(--muted2);opacity:0.25;';
+    cell.innerHTML = `<div style="font-size:11px;color:var(--muted);">${prevDim - i}</div>`;
+    grid.appendChild(cell);
+  }
+
+  // Current month days
+  for (let d = 1; d <= dim; d++) {
+    const date = new Date(S.cal_y, S.cal_m, d);
+    date.setHours(0,0,0,0);
+    const isToday = date.getTime() === today.getTime();
+    const isPast = date < today;
+    const key = S.cal_y + '-' + (S.cal_m+1) + '-' + d;
+    const evts = S.cal_events[key] || [];
+    const hasOverdue = isPast && evts.length > 0;
+
+    const cell = document.createElement('div');
+    cell.style.cssText = `min-height:80px;padding:6px;border:1px solid ${isToday?'var(--accent)':hasOverdue?'var(--red)':'var(--border)'};background:${isToday?'rgba(0,245,196,0.06)':hasOverdue?'rgba(255,64,96,0.04)':'var(--card)'};cursor:pointer;transition:border-color .15s;`;
+    cell.innerHTML = `<div style="font-size:11px;font-weight:${isToday?'800':'400'};color:${isToday?'var(--accent)':isPast?'var(--muted)':'var(--text)'};margin-bottom:4px;">${d}${isToday?'<span style="font-size:8px;letter-spacing:1px;margin-left:4px;color:var(--accent);">TODAY</span>':''}</div>`;
+
+    evts.forEach(e => {
+      const col = EVT_COLORS[e.type] || 'var(--muted)';
+      const tag = document.createElement('div');
+      tag.style.cssText = `font-size:9px;color:${col};background:${col}18;border:1px solid ${col}44;padding:2px 5px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:3px;`;
+      tag.innerHTML = `<span>${EVT_ICONS[e.type]||'📌'}</span><span style="overflow:hidden;text-overflow:ellipsis;">${e.title}</span>`;
+      cell.appendChild(tag);
+    });
+
+    cell.addEventListener('mouseenter', () => { if (!isToday) cell.style.borderColor = 'var(--accent)44'; });
+    cell.addEventListener('mouseleave', () => { cell.style.borderColor = isToday?'var(--accent)':hasOverdue?'var(--red)':'var(--border)'; });
+    cell.addEventListener('click', () => openCalModal(key, d));
+    grid.appendChild(cell);
+  }
+
+  // Fill remaining cells
+  const total = first + dim;
+  const rem = total % 7 === 0 ? 0 : 7 - (total % 7);
+  for (let i = 1; i <= rem; i++) {
+    const cell = document.createElement('div');
+    cell.style.cssText = 'min-height:80px;padding:6px;border:1px solid var(--muted2);opacity:0.25;';
+    cell.innerHTML = `<div style="font-size:11px;color:var(--muted);">${i}</div>`;
+    grid.appendChild(cell);
+  }
+
+  renderAgenda();
+  renderOverdue();
+}
+
+function setCalFilter(f, btn) {
+  calFilter = f;
+  document.querySelectorAll('#cal-filter-btns .btn').forEach(b => { b.style.borderColor='var(--border)'; b.style.color='var(--muted)'; });
+  btn.style.borderColor = 'var(--accent)'; btn.style.color = 'var(--accent)';
+  renderAgenda();
+}
+
+function renderAgenda() {
+  const ct = document.getElementById('cal-agenda-list');
+  if (!ct) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const all = [];
+  Object.entries(S.cal_events || {}).forEach(([key, evts]) => {
+    const parts = key.split('-').map(Number);
+    const d = new Date(parts[0], parts[1]-1, parts[2]); d.setHours(0,0,0,0);
+    if (d >= today) {
+      evts.forEach(e => { if (calFilter === 'all' || e.type === calFilter) all.push({...e, key, d}); });
+    }
+  });
+  all.sort((a,b) => a.d - b.d);
+
+  if (!all.length) {
+    ct.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:8px 0;">No upcoming events. Add one above.</div>';
+    return;
+  }
+
+  let lastMonth = '';
+  ct.innerHTML = '';
+  all.forEach(e => {
+    const diff = Math.round((e.d - today) / 86400000);
+    const diffLabel = diff === 0 ? 'TODAY' : diff === 1 ? 'TOMORROW' : 'in ' + diff + ' days';
+    const urgColor = diff === 0 ? 'var(--red)' : diff <= 3 ? 'var(--accent2)' : diff <= 7 ? 'var(--yellow)' : 'var(--muted)';
+    const col = EVT_COLORS[e.type] || 'var(--muted)';
+    const monthKey = e.d.getFullYear() + '-' + e.d.getMonth();
+    if (monthKey !== lastMonth) {
+      lastMonth = monthKey;
+      const hdr = document.createElement('div');
+      hdr.style.cssText = 'font-family:"Space Mono",monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin:12px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border);';
+      hdr.textContent = MONTHS[e.d.getMonth()] + ' ' + e.d.getFullYear();
+      ct.appendChild(hdr);
+    }
+    const div = document.createElement('div');
+    div.style.cssText = `display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid ${col};margin-bottom:5px;`;
+    div.innerHTML = `
+      <div style="text-align:center;min-width:32px;">
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:${col};line-height:1;">${e.d.getDate()}</div>
+        <div style="font-size:8px;color:var(--muted);">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][e.d.getDay()]}</div>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${EVT_ICONS[e.type]||'📌'} ${e.title}</div>
+        <div style="font-size:9px;color:${urgColor};margin-top:2px;">${diffLabel}</div>
+      </div>
+      <button class="del" onclick="deleteCalEventDirect('${e.key}','${e.id}')">×</button>
+    `;
+    ct.appendChild(div);
+  });
+}
+
+function renderOverdue() {
+  const ct = document.getElementById('cal-overdue-list');
+  const card = document.getElementById('cal-overdue-card');
+  if (!ct || !card) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const overdue = [];
+  Object.entries(S.cal_events || {}).forEach(([key, evts]) => {
+    const parts = key.split('-').map(Number);
+    const d = new Date(parts[0], parts[1]-1, parts[2]); d.setHours(0,0,0,0);
+    if (d < today) {
+      evts.forEach(e => overdue.push({...e, key, d}));
+    }
+  });
+  overdue.sort((a,b) => b.d - a.d); // most recent first
+  if (!overdue.length) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  ct.innerHTML = overdue.map((e,i) => {
+    const daysAgo = Math.round((today - e.d) / 86400000);
+    const col = EVT_COLORS[e.type] || 'var(--muted)';
+    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);margin-bottom:5px;">
+      <span style="font-size:12px;flex:1;">${EVT_ICONS[e.type]||'📌'} ${e.title}</span>
+      <span style="font-size:9px;color:var(--red);">${daysAgo}d ago</span>
+      <button class="del" onclick="deleteCalEventDirect('${e.key}','${e.id}');renderOverdue();">×</button>
+    </div>`;
+  }).join('');
+}
+
+function addCalEventDirect() {
+  const title = document.getElementById('cal-new-title').value.trim();
+  const dateVal = document.getElementById('cal-new-date').value;
+  const type = document.getElementById('cal-new-type').value;
+  if (!title || !dateVal) return;
+  const parts = dateVal.split('-').map(Number);
+  const key = parts[0] + '-' + parts[1] + '-' + parts[2];
+  if (!S.cal_events) S.cal_events = {};
+  if (!S.cal_events[key]) S.cal_events[key] = [];
+  S.cal_events[key].push({id:'ev'+Date.now(), title, type});
+  document.getElementById('cal-new-title').value = '';
+  save();
+  renderCalPage();
+}
+
+function deleteCalEventDirect(key, id) {
+  if (!S.cal_events || !S.cal_events[key]) return;
+  S.cal_events[key] = S.cal_events[key].filter(e => e.id !== id);
+  if (!S.cal_events[key].length) delete S.cal_events[key];
+  save();
+  renderCalPage();
+}
+
+function openCalTab() {
+  const btn = Array.from(document.querySelectorAll('.tab')).find(b=>b.textContent.includes('Calendar'));
+  if (btn) goTab('calendar', btn);
+}
+
+
+// ══════════════════════════════════════════════
+// SUPABASE SYNC
+// ══════════════════════════════════════════════
+let SB_URL = 'https://fubaubgowhszbcpdyiht.supabase.co';
+let SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1YmF1Ymdvd2hzemJjcGR5aWh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMDM5MzUsImV4cCI6MjA5NTg3OTkzNX0.Qo9VIvn6zbkOSj9CsOKDS88x1otp6whMZtdxS57FJvo';
+let SB_DEVICE = 'default';
+
+function loadSBConfig() {
+  const pushBtn = document.getElementById('push-btn');
+  const pullBtn = document.getElementById('pull-btn');
+  const status = document.getElementById('sync-status-text');
+
+  if (pushBtn) pushBtn.disabled = false;
+  if (pullBtn) pullBtn.disabled = false;
+
+  if (status) {
+    status.textContent = '✓ Auto Connected';
+    status.style.color = 'var(--green)';
+  }
+}
+
+async function connectSupabase() {
+  SB_URL = document.getElementById('sb-url').value.trim().replace(/\/+$/, '');
+  SB_KEY = document.getElementById('sb-key').value.trim();
+  SB_DEVICE = document.getElementById('sb-device').value.trim() || 'default';
+  if (!SB_URL || !SB_KEY) { syncLog('⚠ Enter URL and key first'); return; }
+  localStorage.setItem('sb_url', SB_URL);
+  localStorage.setItem('sb_key', SB_KEY);
+  localStorage.setItem('sb_device', SB_DEVICE);
+  document.getElementById('push-btn').disabled = false;
+  document.getElementById('pull-btn').disabled = false;
+  syncLog('Connecting...');
+  await pullFromSupabase();
+}
+
+async function pushToSupabase() {
+  if (!SB_URL || !SB_KEY) { syncLog('⚠ Not connected'); return; }
+  syncLog('Pushing...');
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/sync_data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({id: 'quantos_main', data: S, updated_at: new Date().toISOString()})
+    });
+    if (res.ok || res.status === 201 || res.status === 200) {
+      syncLog('✓ Pushed at ' + new Date().toLocaleTimeString());
+      document.getElementById('sync-status-text').textContent = '✓ Last push: ' + new Date().toLocaleTimeString();
+      document.getElementById('sync-status-text').style.color = 'var(--green)';
+    } else {
+      const err = await res.text();
+      syncLog('✗ Push failed: ' + err.slice(0, 80));
+    }
+  } catch(e) { syncLog('✗ Error: ' + e.message); }
+}
+
+async function pullFromSupabase() {
+  if (!SB_URL || !SB_KEY) { syncLog('⚠ Not connected'); return; }
+  syncLog('Pulling...');
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/sync_data?id=eq.quantos_main&select=data,updated_at', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY }
+    });
+    const rows = await res.json();
+    if (!rows.length) { syncLog('⚠ No data in cloud yet. Push first.'); return; }
+    const remote = rows[0];
+    S = remote.data;
+    save();
+    renderHeader(); renderDaily(); updateOverall();
+    syncLog('✓ Pulled at ' + new Date().toLocaleTimeString() + ' (last updated: ' + new Date(remote.updated_at).toLocaleString() + ')');
+    document.getElementById('sync-status-text').textContent = '✓ Last pull: ' + new Date().toLocaleTimeString();
+    document.getElementById('sync-status-text').style.color = 'var(--green)';
+  } catch(e) { syncLog('✗ Error: ' + e.message); }
+}
+
+function syncLog(msg) {
+  document.getElementById('sync-log').textContent = msg;
+}
+
+// Auto-push every 5 mins if configured
+setInterval(() => { if (SB_URL && SB_KEY) pushToSupabase(); }, 5 * 60 * 1000);
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+load();
+loadSBConfig();
+renderHeader();
+renderDaily();
+updateOverall();
+setTimeout(()=>{pullFromSupabase();},1000);
+setInterval(()=>{if(SB_URL&&SB_KEY) pullFromSupabase();},60000);
+// Wire modal backdrop after DOM is ready
+(function() {
+  const m = document.getElementById('cal-modal');
+  if (m) m.addEventListener('click', function(e) { if (e.target === this) closeCalModal(); });
+})();
+setInterval(() => { renderHeader(); updateOverall(); }, 60000);
+</script>
+<!-- CALENDAR EVENT MODAL -->
+<div id="cal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:1px solid var(--accent);padding:24px;max-width:360px;width:90%;position:relative;">
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:16px;" id="cal-modal-date"></div>
+    <div id="cal-modal-events" style="margin-bottom:16px;display:flex;flex-direction:column;gap:6px;"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+      <input class="inp" id="cal-evt-title" placeholder="Event / deadline / task..." onkeydown="if(event.key==='Enter')saveCalEvent()">
+      <div style="display:flex;gap:6px;">
+        <select class="inp" id="cal-evt-type" style="flex:1;">
+          <option value="deadline">📅 Deadline</option>
+          <option value="exam">📝 Exam</option>
+          <option value="contest">⚡ Contest</option>
+          <option value="reminder">🔔 Reminder</option>
+          <option value="goal">🎯 Goal</option>
+          <option value="other">📌 Other</option>
+        </select>
+        <button class="btn primary" onclick="saveCalEvent()">Save</button>
+      </div>
+    </div>
+    <button class="btn" onclick="closeCalModal()" style="width:100%;">Close</button>
+  </div>
+</div>
+
+<!-- SYNC MODAL -->
+<div id="sync-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;">
+  <div style="background:var(--card);border:1px solid var(--accent);padding:28px;max-width:540px;width:100%;margin:40px auto;position:relative;">
+    <button onclick="document.getElementById('sync-modal').style.display='none'" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">×</button>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:4px;">CROSS-DEVICE SYNC</div>
+    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:16px;">Sync to all devices</div>
+
+    <div id="sync-status-box" style="padding:10px 14px;background:var(--surface);border:1px solid var(--border);margin-bottom:16px;font-size:12px;color:var(--muted);">
+      Status: <span id="sync-status-text">Not configured</span>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:20px;">
+      To sync across <b style="color:var(--text);">Windows + Android + any browser</b>, connect a free Supabase database.<br><br>
+      <b style="color:var(--accent);">Setup (5 mins, free forever):</b><br>
+      1. Go to <a href="https://supabase.com" target="_blank" style="color:var(--accent3);">supabase.com</a> → Sign up free<br>
+      2. New Project → name it <code style="color:var(--accent);">quantos</code> → set a password<br>
+      3. Wait ~2 mins for it to spin up<br>
+      4. Go to <b>SQL Editor</b> → run this query:<br>
+      <div style="background:var(--bg);border:1px solid var(--border);padding:10px;margin:8px 0;font-family:'Space Mono',monospace;font-size:10px;color:var(--green);">
+        CREATE TABLE sync_data (<br>
+        &nbsp;&nbsp;id TEXT PRIMARY KEY,<br>
+        &nbsp;&nbsp;data JSONB,<br>
+        &nbsp;&nbsp;updated_at TIMESTAMPTZ DEFAULT NOW()<br>
+        );
+      </div>
+      5. Go to <b>Project Settings → API</b><br>
+      6. Copy your <b style="color:var(--accent);">Project URL</b> and <b style="color:var(--accent);">anon public key</b><br>
+      7. Paste them below and hit Connect
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+      <input class="inp" id="sb-url" placeholder="https://xxxx.supabase.co" style="font-size:11px;">
+      <input class="inp" id="sb-key" placeholder="eyJhbGci... (anon public key)" style="font-size:11px;">
+      <input class="inp" id="sb-device" placeholder="Device name (e.g. Laptop, Phone)" style="font-size:11px;">
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn primary" onclick="connectSupabase()" style="flex:1;">Connect & Sync</button>
+      <button class="btn" onclick="pushToSupabase()" style="flex:1;" id="push-btn" disabled>Push to Cloud</button>
+      <button class="btn" onclick="pullFromSupabase()" style="flex:1;" id="pull-btn" disabled>Pull from Cloud</button>
+    </div>
+    <div id="sync-log" style="margin-top:12px;font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;min-height:20px;"></div>
+  </div>
+</div>
+
+</body>
+</html>
