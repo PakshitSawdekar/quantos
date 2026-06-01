@@ -787,13 +787,15 @@ function load() {
 }
 
 function save() {
-  try { localStorage.setItem(SK, JSON.stringify(S)); } catch(e) {}
-  updateOverall();
-}
+  try {
+    localStorage.setItem(SK, JSON.stringify(S));
+  } catch(e) {}
 
-function tk() {
-  const d = new Date();
-  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+  updateOverall();
+
+  if (SB_URL && SB_KEY) {
+    pushToSupabase();
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -2563,8 +2565,6 @@ loadSBConfig();
 renderHeader();
 renderDaily();
 updateOverall();
-setTimeout(()=>{pullFromSupabase();},1000);
-setInterval(()=>{if(SB_URL&&SB_KEY) pullFromSupabase();},60000);
 // Wire modal backdrop after DOM is ready
 (function() {
   const m = document.getElementById('cal-modal');
