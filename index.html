@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0047)file:///C:/Users/Pakshit/Downloads/index_3.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QUANT OS</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="./QUANT OS_files/css2" rel="stylesheet">
 <style>
 :root{--bg:#050810;--surface:#090d1a;--card:#0d1220;--border:#1a2240;--accent:#00f5c4;--accent2:#ff6b35;--accent3:#7b61ff;--text:#e8eaf0;--muted:#4a5270;--muted2:#2a3050;--green:#00f5c4;--red:#ff4060;--yellow:#ffd060;}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -214,24 +214,24 @@ select.inp{appearance:none;}
     <div class="nav-badges">
       <div id="online-badge" class="badge green" style="display:none;">☁ Online</div>
       <div id="offline-badge" class="badge" style="display:none;border-color:var(--accent2);color:var(--accent2);">📴 Offline</div>
-      <div class="badge" id="live-date-badge"></div>
-      <div class="badge green" id="day-badge"></div>
-      <button class="btn sm" onclick="document.getElementById('sync-modal').style.display='flex'" style="font-size:9px;padding:4px 10px;border-color:var(--accent3);color:var(--accent3);">☁ Sync</button>
+      <div class="badge" id="live-date-badge">Tue 2 Jun 2026</div>
+      <div class="badge green" id="day-badge">STARTS 1 DAYS</div>
+      <button onclick="document.getElementById('sync-modal').style.display='flex'" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;background:none;border:1px solid var(--accent3);color:var(--accent3);cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(123,97,255,.12)'" onmouseout="this.style.background='none'">⇅ SYNC</button>
       <div class="badge purple">TARGET: JS/CITADEL 2029</div>
     </div>
   </div>
   <div class="tabs">
-    <button class="tab active" onclick="goTab('daily',this)">Daily</button>
-    <button class="tab" onclick="goTab('calendar',this)">📅 Calendar</button>
-    <button class="tab" onclick="goTab('tracker',this)">Tracker</button>
-    <button class="tab" onclick="goTab('gpa',this)">GPA</button>
-    <button class="tab" onclick="goTab('timeline',this)">Timeline</button>
-    <button class="tab" onclick="goTab('progress',this)">Progress</button>
-    <button class="tab" onclick="goTab('books',this)">Books</button>
-    <button class="tab" onclick="goTab('notes',this)">Notes</button>
-    <button class="tab" onclick="goTab('fitness',this)">💪 Fitness</button>
-    <button class="tab" onclick="goTab('pr',this)">🏆 PRs</button>
-    <button class="tab" onclick="goTab('wlog',this)">📋 Log</button>
+    <button class="tab active" onclick="goTab(&#39;daily&#39;,this)">Daily</button>
+    <button class="tab" onclick="goTab(&#39;calendar&#39;,this)">📅 Calendar</button>
+    <button class="tab" onclick="goTab(&#39;tracker&#39;,this)">Tracker</button>
+    <button class="tab" onclick="goTab(&#39;gpa&#39;,this)">GPA</button>
+    <button class="tab" onclick="goTab(&#39;timeline&#39;,this)">Timeline</button>
+    <button class="tab" onclick="goTab(&#39;progress&#39;,this)">Progress</button>
+    <button class="tab" onclick="goTab(&#39;books&#39;,this)">Books</button>
+    <button class="tab" onclick="goTab(&#39;notes&#39;,this)">Notes</button>
+    <button class="tab" onclick="goTab(&#39;fitness&#39;,this)">💪 Fitness</button>
+    <button class="tab" onclick="goTab(&#39;pr&#39;,this)">🏆 PRs</button>
+    <button class="tab" onclick="goTab(&#39;wlog&#39;,this)">📋 Log</button>
   </div>
 </div>
 
@@ -241,8 +241,8 @@ select.inp{appearance:none;}
     <span class="overall-label">OVERALL PROGRESS TO JANE STREET 2029</span>
     <span class="overall-pct" id="overall-pct">0.00%</span>
   </div>
-  <div class="overall-track"><div class="overall-fill" id="overall-fill" style="width:0%"></div></div>
-  <div class="overall-breakdown" id="overall-bd"></div>
+  <div class="overall-track"><div class="overall-fill" id="overall-fill" style="width: 0.05%;"></div></div>
+  <div class="overall-breakdown" id="overall-bd"><span class="ob-item" style="color:var(--muted);">LC: 0.0%</span><span class="ob-item" style="color:var(--muted);">CF: 0.0%</span><span class="ob-item" style="color:var(--muted);">Study: 0.0%</span><span class="ob-item" style="color:var(--muted);">Books: 0.0%</span><span class="ob-item" style="color:var(--muted);">Habits: 0.0%</span><span class="ob-item" style="color:var(--muted);">Mocks: 0.0%</span><span class="ob-item" style="color:var(--muted);">Puzzles: 0.0%</span><span class="ob-item" style="color:var(--muted);">WQ: 0.0%</span><span class="ob-item" style="color:var(--muted);">Todos: 0.0%</span></div>
 </div>
 
 <!-- PAGES -->
@@ -253,8 +253,8 @@ select.inp{appearance:none;}
     <div>
       <div class="ring-wrap">
         <svg class="ring-svg" viewBox="0 0 64 64">
-          <circle class="ring-bg" cx="32" cy="32" r="27"/>
-          <circle class="ring-fg" id="ring-fg" cx="32" cy="32" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6"/>
+          <circle class="ring-bg" cx="32" cy="32" r="27"></circle>
+          <circle class="ring-fg" id="ring-fg" cx="32" cy="32" r="27" stroke-dasharray="169.6" stroke-dashoffset="169.6" style="stroke-dashoffset: 169.6;"></circle>
         </svg>
         <div><div class="ring-pct" id="ring-pct">0%</div><div class="ring-lbl">TODAY DONE</div></div>
       </div>
@@ -265,24 +265,25 @@ select.inp{appearance:none;}
         </div>
         <div id="nonneg-add-row" style="display:none;margin-bottom:10px;">
           <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <input class="inp" id="nn-inp" placeholder="New habit..." style="flex:2;min-width:120px;" onkeydown="if(event.key==='Enter')addNonneg()">
+            <input class="inp" id="nn-inp" placeholder="New habit..." style="flex:2;min-width:120px;" onkeydown="if(event.key===&#39;Enter&#39;)addNonneg()">
             <select class="inp" id="nn-tag-inp" style="max-width:100px;">
               <option value="LC">LC</option>
               <option value="MATH">MATH</option>
               <option value="FINANCE">FINANCE</option>
-              <option value="HABIT" selected>HABIT</option>
+              <option value="HABIT" selected="">HABIT</option>
               <option value="ACAD">ACAD</option>
               <option value="FITNESS">FITNESS</option>
             </select>
             <button class="btn primary" onclick="addNonneg()">Add</button>
           </div>
         </div>
-        <div id="nonneg-list"></div>
+        <div id="nonneg-list"><div class="cb-row"><div class="cb-box "></div><div class="cb-label">2x LeetCode (C++)</div><div class="tag tag-lc">LC</div></div><div class="cb-row"><div class="cb-box "></div><div class="cb-label">Zetamac 10 mins</div><div class="tag tag-habit">HABIT</div></div><div class="cb-row"><div class="cb-box "></div><div class="cb-label">20 min markets review</div><div class="tag tag-fin">FINANCE</div></div><div class="cb-row"><div class="cb-box "></div><div class="cb-label">GitHub commit</div><div class="tag tag-habit">HABIT</div></div><div class="cb-row"><div class="cb-box "></div><div class="cb-label">Codeforces problem / upsolve</div><div class="tag tag-lc">LC</div></div><div class="cb-row"><div class="cb-box "></div><div class="cb-label">Math / reading (1hr min)</div><div class="tag tag-math">MATH</div></div><div class="cb-row"><div class="cb-box "></div><div class="cb-label">GPA — attend class / submit work</div><div class="tag tag-acad">ACAD</div></div></div>
       </div>
       <div class="card">
         <div class="card-title">Quick Note</div>
         <textarea class="note-ta" id="daily-note" placeholder="Brain dump for today..." oninput="saveDailyNote()" style="min-height:80px;"></textarea>
       </div>
+
     </div>
 
     <!-- COL 2: Mini calendar with event headlines -->
@@ -290,7 +291,7 @@ select.inp{appearance:none;}
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
           <button class="btn sm" onclick="calPrev()">◀</button>
-          <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;" id="cal-label"></span>
+          <span style="font-family:&#39;Syne&#39;,sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;" id="cal-label">June 2026</span>
           <button class="btn sm" onclick="calNext()">▶</button>
         </div>
         <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;" id="cal-day-headers">
@@ -302,10 +303,37 @@ select.inp{appearance:none;}
           <div style="text-align:center;font-size:8px;color:var(--muted);">F</div>
           <div style="text-align:center;font-size:8px;color:var(--muted);">S</div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;" id="cal-grid"></div>
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;" id="cal-grid"><div style="font-size:9px;color:var(--muted);text-align:center;padding:2px;">S</div><div style="font-size:9px;color:var(--muted);text-align:center;padding:2px;">M</div><div style="font-size:9px;color:var(--muted);text-align:center;padding:2px;">T</div><div style="font-size:9px;color:var(--muted);text-align:center;padding:2px;">W</div><div style="font-size:9px;color:var(--muted);text-align:center;padding:2px;">T</div><div style="font-size:9px;color:var(--muted);text-align:center;padding:2px;">F</div><div style="font-size:9px;color:var(--muted);text-align:center;padding:2px;">S</div><div></div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">1</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px; background: var(--accent); color: rgb(0, 0, 0); font-weight: 800;">2</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">3</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">4</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">5</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">6</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">7</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">8</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">9</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">10</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">11</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">12</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">13</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">14</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">15</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">16</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">17</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">18</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">19</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">20</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">21</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">22</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">23</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">24</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">25</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">26</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">27</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">28</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">29</div><div title="" style="text-align: center; cursor: pointer; padding: 3px 1px; font-size: 11px; position: relative; border-radius: 2px;">30</div></div>
         <div id="upcoming-events" style="margin-top:12px;"></div>
         <div style="margin-top:8px;">
           <button class="btn sm" onclick="openCalTab()" style="width:100%;border-color:var(--accent);color:var(--accent);">Open Full Calendar →</button>
+        </div>
+      </div>
+
+      <!-- DAILY MOTIVATION CARD -->
+      <div class="card" id="motivation-card" style="border-color:rgba(123,97,255,.3);background:linear-gradient(135deg,rgba(123,97,255,.05),rgba(0,245,196,.03));">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:6px;">
+          <div class="card-title" style="margin-bottom:0;color:var(--accent3);">⚡ DAILY FUEL</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div id="motiv-category" style="font-family:'Space Mono',monospace;font-size:8px;padding:3px 8px;border:1px solid var(--accent3);color:var(--accent3);letter-spacing:1px;"></div>
+            <button onclick="saveMotivQuote()" id="motiv-save-btn" title="Save this quote" style="background:none;border:1px solid var(--muted2);color:var(--muted);font-size:14px;padding:2px 7px;cursor:pointer;transition:all .2s;line-height:1;" onmouseover="this.style.borderColor='var(--yellow)';this.style.color='var(--yellow)'" onmouseout="this.style.borderColor='var(--muted2)';this.style.color='var(--muted)'">♡</button>
+            <button onclick="toggleSavedQuotes()" id="motiv-vault-btn" title="View saved quotes" style="background:none;border:1px solid var(--muted2);color:var(--muted);font-family:'Space Mono',monospace;font-size:8px;padding:3px 7px;cursor:pointer;transition:all .2s;letter-spacing:1px;" onmouseover="this.style.borderColor='var(--accent3)';this.style.color='var(--accent3)'" onmouseout="this.style.borderColor='var(--muted2)';this.style.color='var(--muted)'">VAULT</button>
+          </div>
+        </div>
+        <!-- Quote display -->
+        <div id="motiv-main">
+          <div id="motiv-quote" style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:8px;"></div>
+          <div id="motiv-author" style="font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;"></div>
+          <div style="margin-top:10px;font-size:8px;color:var(--muted);font-family:'Space Mono',monospace;display:flex;justify-content:space-between;">
+            <span>REFRESHES DAILY · NO REPEATS</span>
+            <span id="motiv-seen-count" style="color:var(--muted2);"></span>
+          </div>
+        </div>
+        <!-- Saved quotes vault -->
+        <div id="motiv-vault" style="display:none;">
+          <div style="font-size:9px;color:var(--accent3);letter-spacing:2px;margin-bottom:8px;">SAVED QUOTES</div>
+          <div id="motiv-saved-list" style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;"></div>
+          <div id="motiv-empty" style="font-size:11px;color:var(--muted);display:none;">No saved quotes yet. Hit ♡ to save one.</div>
         </div>
       </div>
     </div>
@@ -316,23 +344,23 @@ select.inp{appearance:none;}
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
           <div class="card-title" style="margin-bottom:0;">To-Do List</div>
           <div style="display:flex;gap:5px;flex-wrap:wrap;">
-            <button class="btn sm" id="tf-all" onclick="setFilter('all',this)" style="border-color:var(--accent);color:var(--accent);">All</button>
-            <button class="btn sm" id="tf-active" onclick="setFilter('active',this)">Active</button>
-            <button class="btn sm" id="tf-done" onclick="setFilter('done',this)">Done</button>
+            <button class="btn sm" id="tf-all" onclick="setFilter(&#39;all&#39;,this)" style="border-color:var(--accent);color:var(--accent);">All</button>
+            <button class="btn sm" id="tf-active" onclick="setFilter(&#39;active&#39;,this)">Active</button>
+            <button class="btn sm" id="tf-done" onclick="setFilter(&#39;done&#39;,this)">Done</button>
             <button class="btn sm" onclick="clearDone()">Clear Done</button>
           </div>
         </div>
         <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;" id="pri-btns">
-          <button class="btn sm" onclick="setPri('all',this)" style="border-color:var(--accent);color:var(--accent);">All</button>
-          <button class="btn sm" onclick="setPri('high',this)">🔴 High</button>
-          <button class="btn sm" onclick="setPri('medium',this)">🟡 Med</button>
-          <button class="btn sm" onclick="setPri('low',this)">🟢 Low</button>
+          <button class="btn sm" onclick="setPri(&#39;all&#39;,this)" style="border-color:var(--accent);color:var(--accent);">All</button>
+          <button class="btn sm" onclick="setPri(&#39;high&#39;,this)">🔴 High</button>
+          <button class="btn sm" onclick="setPri(&#39;medium&#39;,this)">🟡 Med</button>
+          <button class="btn sm" onclick="setPri(&#39;low&#39;,this)">🟢 Low</button>
         </div>
         <div id="todo-list" style="min-height:30px;"></div>
         <div style="margin-top:12px;background:var(--surface);border:1px solid var(--border);padding:12px;">
           <div style="font-size:9px;color:var(--accent);letter-spacing:2px;margin-bottom:10px;">ADD TASK</div>
           <div class="row">
-            <input class="inp" id="td-inp" placeholder="What needs to be done?" onkeydown="if(event.key==='Enter')addTodo()">
+            <input class="inp" id="td-inp" placeholder="What needs to be done?" onkeydown="if(event.key===&#39;Enter&#39;)addTodo()">
           </div>
           <div class="row">
             <select class="inp" id="td-cat" style="flex:1;">
@@ -341,7 +369,7 @@ select.inp{appearance:none;}
             </select>
             <select class="inp" id="td-pri" style="flex:1;">
               <option value="high">🔴 High</option>
-              <option value="medium" selected>🟡 Medium</option>
+              <option value="medium" selected="">🟡 Medium</option>
               <option value="low">🟢 Low</option>
             </select>
           </div>
@@ -353,7 +381,7 @@ select.inp{appearance:none;}
             <button class="btn primary" onclick="addTodo()" style="align-self:flex-end;">+ Add</button>
           </div>
         </div>
-        <div style="font-size:9px;color:var(--muted);display:flex;justify-content:space-between;margin-top:6px;" id="todo-summary"></div>
+        <div style="font-size:9px;color:var(--muted);display:flex;justify-content:space-between;margin-top:6px;" id="todo-summary"><span>0/0 done</span><span style="color:var(--muted);"></span></div>
       </div>
     </div>
 
@@ -397,7 +425,7 @@ select.inp{appearance:none;}
     <div class="card-title">Semester GPA Tracker</div>
     <div class="g4" id="sem-grid" style="margin-bottom:16px;"></div>
     <div style="background:var(--surface);border:1px solid var(--accent);padding:18px;display:flex;align-items:center;gap:20px;">
-      <div style="font-family:'Syne',sans-serif;font-size:48px;font-weight:800;color:var(--accent);line-height:1;" id="cgpa-val">—</div>
+      <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:48px;font-weight:800;color:var(--accent);line-height:1;" id="cgpa-val">—</div>
       <div>
         <div style="font-size:9px;color:var(--muted);letter-spacing:2px;">CURRENT CGPA</div>
         <div style="font-size:12px;margin-top:4px;" id="cgpa-sub">Enter GPAs above</div>
@@ -444,7 +472,7 @@ select.inp{appearance:none;}
   <div class="card">
     <div class="card-title">Add Book</div>
     <div class="row">
-      <input class="inp" id="bk-title" placeholder="Title..." onkeydown="if(event.key==='Enter')addBook()">
+      <input class="inp" id="bk-title" placeholder="Title..." onkeydown="if(event.key===&#39;Enter&#39;)addBook()">
       <input class="inp" id="bk-author" placeholder="Author" style="max-width:180px;">
       <select class="inp" id="bk-cat" style="max-width:110px;">
         <option>Math</option><option>Finance</option><option>Code</option><option>Strategy</option><option>ML</option><option>Other</option>
@@ -470,80 +498,93 @@ select.inp{appearance:none;}
 
 
 <div class="page" id="page-calendar">
-  <div style="display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:start;" class="cal-layout">
-<style>@media(max-width:900px){.cal-layout{grid-template-columns:1fr!important;}}</style>
+  <style>
+    .cal-main-layout { display:grid; grid-template-columns:1fr 300px; gap:14px; align-items:start; }
+    @media(max-width:850px){ .cal-main-layout { grid-template-columns:1fr!important; } }
+    .day-panel-evt { display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);margin-bottom:5px; }
+    .day-panel-evt:hover .del { opacity:1; }
+    .day-panel-evt .del { opacity:0; transition:opacity .15s; }
+  </style>
 
-    <!-- LEFT: Full calendar -->
-    <div>
-      <div class="card" style="margin-bottom:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px;">
-          <div>
-            <div class="card-title" style="margin-bottom:2px;">CALENDAR</div>
-            <div style="font-size:22px;font-family:'Syne',sans-serif;font-weight:800;color:var(--text);" id="cal-full-label"></div>
+  <div class="cal-main-layout">
+
+    <!-- LEFT: Calendar grid -->
+    <div class="card" style="margin-bottom:0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <button class="btn" onclick="calPrev();renderCalPage();" style="padding:6px 18px;font-size:16px;">‹</button>
+        <div style="text-align:center;">
+          <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);" id="cal-full-label">June 2026</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn" onclick="calToday();renderCalPage();" style="padding:5px 12px;border-color:var(--accent);color:var(--accent);font-size:10px;">Today</button>
+          <button class="btn" onclick="calNext();renderCalPage();" style="padding:6px 18px;font-size:16px;">›</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;">
+        <div style="text-align:center;font-size:9px;color:var(--muted);padding:3px;">Sun</div>
+        <div style="text-align:center;font-size:9px;color:var(--muted);padding:3px;">Mon</div>
+        <div style="text-align:center;font-size:9px;color:var(--muted);padding:3px;">Tue</div>
+        <div style="text-align:center;font-size:9px;color:var(--muted);padding:3px;">Wed</div>
+        <div style="text-align:center;font-size:9px;color:var(--muted);padding:3px;">Thu</div>
+        <div style="text-align:center;font-size:9px;color:var(--muted);padding:3px;">Fri</div>
+        <div style="text-align:center;font-size:9px;color:var(--muted);padding:3px;">Sat</div>
+      </div>
+      <div id="cal-full-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;"></div>
+    </div>
+
+    <!-- RIGHT: Day panel (click a day to open) -->
+    <div id="cal-day-panel" style="position:sticky;top:80px;">
+      <!-- Default state -->
+      <div id="cal-panel-empty" class="card" style="margin-bottom:0;border-color:var(--muted2);text-align:center;padding:32px 16px;">
+        <div style="font-size:28px;margin-bottom:10px;">📅</div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;">CLICK ANY DAY</div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:6px;">to view & add events</div>
+      </div>
+
+      <!-- Active day panel (hidden until day clicked) -->
+      <div id="cal-panel-active" style="display:none;">
+        <div class="card" style="margin-bottom:10px;">
+          <!-- Day header -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div>
+              <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--accent);" id="cal-panel-day"></div>
+              <div style="font-size:9px;color:var(--muted);font-family:'Space Mono',monospace;" id="cal-panel-dayname"></div>
+            </div>
+            <button onclick="closeDayPanel()" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 4px;">×</button>
           </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <button class="btn" onclick="calPrev();renderCalPage();" style="padding:6px 14px;">◀ Prev</button>
-            <button class="btn" onclick="calToday();renderCalPage();" style="padding:6px 14px;border-color:var(--accent);color:var(--accent);">Today</button>
-            <button class="btn" onclick="calNext();renderCalPage();" style="padding:6px 14px;">Next ▶</button>
+
+          <!-- Events list -->
+          <div id="cal-panel-events" style="margin-bottom:12px;min-height:20px;"></div>
+
+          <!-- Add form -->
+          <div style="border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:7px;">
+            <input class="inp" id="cal-panel-title" placeholder="Add event..." onkeydown="if(event.key==='Enter')addFromPanel()" style="font-size:12px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+              <div>
+                <div style="font-size:8px;color:var(--muted);margin-bottom:3px;">START</div>
+                <input class="inp" id="cal-panel-start" type="date" style="font-size:10px;">
+              </div>
+              <div>
+                <div style="font-size:8px;color:var(--muted);margin-bottom:3px;">END <span style="color:var(--muted2);">opt</span></div>
+                <input class="inp" id="cal-panel-end" type="date" style="font-size:10px;">
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <select class="inp" id="cal-panel-type" style="flex:1;font-size:11px;">
+                <option value="deadline">📅 Deadline</option>
+                <option value="exam">📝 Exam</option>
+                <option value="contest">⚡ Contest</option>
+                <option value="reminder">🔔 Reminder</option>
+                <option value="goal">🎯 Goal</option>
+                <option value="other">📌 Other</option>
+              </select>
+              <button class="btn primary" onclick="addFromPanel()" style="white-space:nowrap;font-size:10px;">+ Add</button>
+            </div>
           </div>
         </div>
-        <!-- Day headers -->
-        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px;">
-          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">SUN</div>
-          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">MON</div>
-          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">TUE</div>
-          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">WED</div>
-          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">THU</div>
-          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">FRI</div>
-          <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:1px;">SAT</div>
-        </div>
-        <div id="cal-full-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;"></div>
       </div>
     </div>
 
-    <!-- RIGHT: Agenda + Add event -->
-    <div>
-      <!-- Add event -->
-      <div class="card">
-        <div class="card-title">ADD EVENT</div>
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <input class="inp" id="cal-new-title" placeholder="Title / deadline / task...">
-          <input class="inp" id="cal-new-date" type="date">
-          <div style="display:flex;gap:6px;">
-            <select class="inp" id="cal-new-type" style="flex:1;">
-              <option value="deadline">📅 Deadline</option>
-              <option value="exam">📝 Exam</option>
-              <option value="contest">⚡ Contest</option>
-              <option value="reminder">🔔 Reminder</option>
-              <option value="goal">🎯 Goal</option>
-              <option value="other">📌 Other</option>
-            </select>
-            <button class="btn primary" onclick="addCalEventDirect()">+ Add</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Upcoming all events -->
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:6px;">
-          <div class="card-title" style="margin-bottom:0;">ALL UPCOMING</div>
-          <div style="display:flex;gap:5px;flex-wrap:wrap;" id="cal-filter-btns">
-            <button class="btn sm" onclick="setCalFilter('all',this)" style="border-color:var(--accent);color:var(--accent);">All</button>
-            <button class="btn sm" onclick="setCalFilter('deadline',this)">📅</button>
-            <button class="btn sm" onclick="setCalFilter('exam',this)">📝</button>
-            <button class="btn sm" onclick="setCalFilter('contest',this)">⚡</button>
-            <button class="btn sm" onclick="setCalFilter('goal',this)">🎯</button>
-          </div>
-        </div>
-        <div id="cal-agenda-list"></div>
-      </div>
-
-      <!-- Overdue -->
-      <div class="card" id="cal-overdue-card" style="display:none;border-color:var(--red);">
-        <div class="card-title" style="color:var(--red);">⚠ OVERDUE</div>
-        <div id="cal-overdue-list"></div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -553,8 +594,8 @@ select.inp{appearance:none;}
   <!-- TARGETS BANNER -->
   <div style="background:var(--card);border:1px solid var(--accent2);padding:16px;margin-bottom:16px;display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
     <div>
-      <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--accent2);letter-spacing:3px;margin-bottom:4px;">YOUR PHYSIQUE TARGETS</div>
-      <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;">Lean Bulk → Cut → Shredded. ~12–16 months.</div>
+      <div style="font-family:&#39;Space Mono&#39;,monospace;font-size:9px;color:var(--accent2);letter-spacing:3px;margin-bottom:4px;">YOUR PHYSIQUE TARGETS</div>
+      <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:13px;font-weight:700;">Lean Bulk → Cut → Shredded. ~12–16 months.</div>
     </div>
     <div style="display:flex;gap:12px;flex-wrap:wrap;">
       <div class="stat-box" style="min-width:110px;"><div class="stat-lbl">Daily Calories</div><div class="stat-val orange">3000</div><div class="stat-sub">lean bulk phase</div></div>
@@ -576,7 +617,7 @@ select.inp{appearance:none;}
       <div class="card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
           <div class="card-title" style="margin-bottom:0;">Today's Food Log</div>
-          <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);" id="fit-date-label"></div>
+          <div style="font-family:&#39;Space Mono&#39;,monospace;font-size:9px;color:var(--muted);" id="fit-date-label"></div>
         </div>
 
         <!-- Macro rings -->
@@ -584,13 +625,13 @@ select.inp{appearance:none;}
 
         <!-- Food search -->
         <div class="row">
-          <input class="inp" id="food-search-inp" placeholder="Search food (e.g. rice, chicken, egg)..." onkeydown="if(event.key==='Enter')searchFood()">
+          <input class="inp" id="food-search-inp" placeholder="Search food (e.g. rice, chicken, egg)..." onkeydown="if(event.key===&#39;Enter&#39;)searchFood()">
           <button class="btn primary" onclick="searchFood()">Search</button>
         </div>
         <div id="food-search-results" style="margin-bottom:10px;"></div>
 
         <!-- Manual add -->
-        <div style="font-family:'Space Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">OR ADD MANUALLY</div>
+        <div style="font-family:&#39;Space Mono&#39;,monospace;font-size:9px;color:var(--muted);letter-spacing:2px;margin-bottom:8px;">OR ADD MANUALLY</div>
         <div class="row">
           <input class="inp" id="food-name" placeholder="Food name">
           <input class="inp" id="food-qty" type="number" placeholder="Qty (g/ml)" style="max-width:100px;" value="100">
@@ -619,14 +660,14 @@ select.inp{appearance:none;}
       <div class="card">
         <div class="card-title">Today's Workout</div>
         <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;" id="workout-type-btns">
-          <button class="btn sm" onclick="setWorkout('Push',this)">Push</button>
-          <button class="btn sm" onclick="setWorkout('Pull',this)">Pull</button>
-          <button class="btn sm" onclick="setWorkout('Legs',this)">Legs</button>
-          <button class="btn sm" onclick="setWorkout('Cycling',this)">Cycling</button>
-          <button class="btn sm" onclick="setWorkout('Run',this)">Run</button>
-          <button class="btn sm" onclick="setWorkout('Swim',this)">Swim</button>
-          <button class="btn sm" onclick="setWorkout('Brick',this)">Brick</button>
-          <button class="btn sm" onclick="setWorkout('Rest',this)">Rest</button>
+          <button class="btn sm" onclick="setWorkout(&#39;Push&#39;,this)">Push</button>
+          <button class="btn sm" onclick="setWorkout(&#39;Pull&#39;,this)">Pull</button>
+          <button class="btn sm" onclick="setWorkout(&#39;Legs&#39;,this)">Legs</button>
+          <button class="btn sm" onclick="setWorkout(&#39;Cycling&#39;,this)">Cycling</button>
+          <button class="btn sm" onclick="setWorkout(&#39;Run&#39;,this)">Run</button>
+          <button class="btn sm" onclick="setWorkout(&#39;Swim&#39;,this)">Swim</button>
+          <button class="btn sm" onclick="setWorkout(&#39;Brick&#39;,this)">Brick</button>
+          <button class="btn sm" onclick="setWorkout(&#39;Rest&#39;,this)">Rest</button>
         </div>
         <div id="workout-logged" style="font-size:12px;color:var(--muted);margin-bottom:10px;"></div>
         <textarea class="note-ta" id="workout-notes" placeholder="Describe your workout: e.g. Bench 4x8 @80kg, Incline DB 3x10 @24kg, Cable fly 3x15, Shoulder press 3x10 @50kg..." oninput="saveWorkoutNotes()" style="min-height:100px;"></textarea>
@@ -653,7 +694,7 @@ select.inp{appearance:none;}
 <div class="page" id="page-pr">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
     <div>
-      <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;">Personal Records</div>
+      <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:24px;font-weight:800;">Personal Records</div>
       <div style="font-size:10px;color:var(--muted);letter-spacing:2px;">Track your best lifts and athletic milestones</div>
     </div>
   </div>
@@ -664,14 +705,14 @@ select.inp{appearance:none;}
     <div class="row">
       <input class="inp" id="pr-exercise" placeholder="Exercise (e.g. Deadlift, Bench Press)" list="exercise-list">
       <datalist id="exercise-list">
-        <option value="Deadlift"><option value="Back Squat"><option value="Bench Press">
-        <option value="Overhead Press"><option value="Barbell Row"><option value="Pull-ups">
-        <option value="Incline Bench Press"><option value="Romanian Deadlift"><option value="Hip Thrust">
-        <option value="Dumbbell Press"><option value="Lateral Raises"><option value="Bicep Curl">
-        <option value="Tricep Pushdown"><option value="Cable Row"><option value="Leg Press">
-        <option value="Running 5K"><option value="Running 10K"><option value="Cycling 40K">
-        <option value="Swimming 1.9K"><option value="Ironman 70.3"><option value="Full Ironman">
-      </datalist>
+        <option value="Deadlift"></option><option value="Back Squat"></option><option value="Bench Press">
+        </option><option value="Overhead Press"></option><option value="Barbell Row"></option><option value="Pull-ups">
+        </option><option value="Incline Bench Press"></option><option value="Romanian Deadlift"></option><option value="Hip Thrust">
+        </option><option value="Dumbbell Press"></option><option value="Lateral Raises"></option><option value="Bicep Curl">
+        </option><option value="Tricep Pushdown"></option><option value="Cable Row"></option><option value="Leg Press">
+        </option><option value="Running 5K"></option><option value="Running 10K"></option><option value="Cycling 40K">
+        </option><option value="Swimming 1.9K"></option><option value="Ironman 70.3"></option><option value="Full Ironman">
+      </option></datalist>
       <input class="inp" id="pr-weight" type="number" placeholder="Weight (kg) or Time" style="max-width:130px;" step="0.5">
       <input class="inp" id="pr-reps" type="number" placeholder="Reps (optional)" style="max-width:100px;">
     </div>
@@ -690,7 +731,7 @@ select.inp{appearance:none;}
 <div class="page" id="page-wlog">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
     <div>
-      <div style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;">Workout Log</div>
+      <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:24px;font-weight:800;">Workout Log</div>
       <div style="font-size:10px;color:var(--muted);letter-spacing:2px;">Every session. Track progress over time.</div>
     </div>
     <button class="btn primary" onclick="startNewSession()">+ New Session</button>
@@ -702,9 +743,9 @@ select.inp{appearance:none;}
     <div class="row">
       <input class="inp" id="ws-date" type="date">
       <select class="inp" id="ws-type" style="max-width:140px;">
-        <option>Push<option>Pull<option>Legs<option>Upper<option>Full Body
-        <option>Cycling<option>Running<option>Swimming<option>Brick<option>Rest
-      </select>
+        <option>Push</option><option>Pull</option><option>Legs</option><option>Upper</option><option>Full Body
+        </option><option>Cycling</option><option>Running</option><option>Swimming</option><option>Brick</option><option>Rest
+      </option></select>
       <input class="inp" id="ws-duration" type="number" placeholder="Duration (mins)" style="max-width:140px;">
     </div>
 
@@ -719,7 +760,7 @@ select.inp{appearance:none;}
       <select class="inp" id="ws-feel" style="max-width:150px;">
         <option value="5">💪 Felt amazing</option>
         <option value="4">😤 Solid session</option>
-        <option value="3" selected>😐 Average</option>
+        <option value="3" selected="">😐 Average</option>
         <option value="2">😩 Struggled</option>
         <option value="1">💀 Terrible</option>
       </select>
@@ -730,13 +771,13 @@ select.inp{appearance:none;}
 
   <!-- Filter -->
   <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;" id="wlog-filters">
-    <button class="btn sm" onclick="setWlogFilter('All',this)" style="border-color:var(--accent);color:var(--accent);">All</button>
-    <button class="btn sm" onclick="setWlogFilter('Push',this)">Push</button>
-    <button class="btn sm" onclick="setWlogFilter('Pull',this)">Pull</button>
-    <button class="btn sm" onclick="setWlogFilter('Legs',this)">Legs</button>
-    <button class="btn sm" onclick="setWlogFilter('Cycling',this)">Cycling</button>
-    <button class="btn sm" onclick="setWlogFilter('Running',this)">Running</button>
-    <button class="btn sm" onclick="setWlogFilter('Swimming',this)">Swimming</button>
+    <button class="btn sm" onclick="setWlogFilter(&#39;All&#39;,this)" style="border-color:var(--accent);color:var(--accent);">All</button>
+    <button class="btn sm" onclick="setWlogFilter(&#39;Push&#39;,this)">Push</button>
+    <button class="btn sm" onclick="setWlogFilter(&#39;Pull&#39;,this)">Pull</button>
+    <button class="btn sm" onclick="setWlogFilter(&#39;Legs&#39;,this)">Legs</button>
+    <button class="btn sm" onclick="setWlogFilter(&#39;Cycling&#39;,this)">Cycling</button>
+    <button class="btn sm" onclick="setWlogFilter(&#39;Running&#39;,this)">Running</button>
+    <button class="btn sm" onclick="setWlogFilter(&#39;Swimming&#39;,this)">Swimming</button>
   </div>
 
   <!-- Stats summary -->
@@ -832,6 +873,7 @@ async function syncOnStart() {
 }
 
 function showSyncBadge(msg) {
+  // Toast badge
   let badge = document.getElementById('sync-badge');
   if (!badge) {
     badge = document.createElement('div');
@@ -842,6 +884,11 @@ function showSyncBadge(msg) {
   badge.textContent = msg;
   badge.style.opacity = '1';
   setTimeout(() => { badge.style.opacity = '0'; }, 3000);
+  // Update daily card status
+  const ps = document.getElementById('daily-last-push');
+  if (ps && msg.includes('Push')) ps.textContent = 'Last push: ' + new Date().toLocaleTimeString();
+  const os = document.getElementById('daily-online-status');
+  if (os) os.textContent = navigator.onLine ? '☁ Online' : '📴 Offline';
 }
 
 function save() {
@@ -975,6 +1022,12 @@ function updateOverall() {
 // DAILY
 // ══════════════════════════════════════════════
 function renderDaily() {
+  // Update online status in sync card
+  const os = document.getElementById('daily-online-status');
+  if (os) os.textContent = navigator.onLine ? '☁ Online' : '📴 Offline';
+  const ps = document.getElementById('daily-last-push');
+  const lastTs = localStorage.getItem('qos_v2_ts');
+  if (ps && lastTs) ps.textContent = 'Last push: ' + new Date(parseInt(lastTs)).toLocaleTimeString();
   const today = tk();
   if (!S.nonneg_dates[today]) S.nonneg_dates[today] = {};
   renderNonneg(today);
@@ -1196,8 +1249,17 @@ function openCalModal(key, d) {
   calModalDate = key;
   if (!S.cal_events) S.cal_events = {};
   if (!S.cal_events[key]) S.cal_events[key] = [];
-  document.getElementById('cal-modal-date').textContent = MONTHS[S.cal_m]+' '+d+', '+S.cal_y;
+
+  // Display header
+  document.getElementById('cal-modal-date').textContent = MONTHS[S.cal_m] + ' ' + d + ', ' + S.cal_y;
+
+  // Pre-fill start date from clicked day
+  const parts = key.split('-').map(Number);
+  const startIso = parts[0] + '-' + String(parts[1]).padStart(2,'0') + '-' + String(parts[2]).padStart(2,'0');
+  document.getElementById('cal-evt-start').value = startIso;
+  document.getElementById('cal-evt-end').value = '';
   document.getElementById('cal-evt-title').value = '';
+
   renderCalModalEvents(key);
   const modal = document.getElementById('cal-modal');
   modal.style.display = 'flex';
@@ -1219,13 +1281,40 @@ function renderCalModalEvents(key) {
 function saveCalEvent() {
   const title = document.getElementById('cal-evt-title').value.trim();
   const type = document.getElementById('cal-evt-type').value;
-  if (!title || !calModalDate) return;
-  if (!S.cal_events[calModalDate]) S.cal_events[calModalDate] = [];
-  S.cal_events[calModalDate].push({id:'ev'+Date.now(), title, type});
+  const startVal = document.getElementById('cal-evt-start').value;
+  const endVal = document.getElementById('cal-evt-end').value;
+  if (!title || !startVal) return;
+
+  if (!S.cal_events) S.cal_events = {};
+
+  const startParts = startVal.split('-').map(Number);
+  const start = new Date(startParts[0], startParts[1]-1, startParts[2]);
+
+  let end = start;
+  if (endVal) {
+    const ep = endVal.split('-').map(Number);
+    const endDate = new Date(ep[0], ep[1]-1, ep[2]);
+    if (endDate >= start) end = endDate;
+  }
+
+  const id = 'ev' + Date.now();
+  const hasRange = endVal && end > start;
+
+  // Store on every day in the range
+  for (let cur = new Date(start); cur <= end; cur.setDate(cur.getDate() + 1)) {
+    const k = cur.getFullYear() + '-' + (cur.getMonth()+1) + '-' + cur.getDate();
+    if (!S.cal_events[k]) S.cal_events[k] = [];
+    const label = hasRange
+      ? title + (cur.getTime()===start.getTime() ? ' ▶' : cur.getTime()===end.getTime() ? ' ◀' : ' ─')
+      : title;
+    S.cal_events[k].push({id, title: label, type});
+  }
+
   document.getElementById('cal-evt-title').value = '';
   save();
   renderCalModalEvents(calModalDate);
   renderMiniCal();
+  if (document.getElementById('page-calendar')?.classList.contains('active')) renderCalPage();
 }
 
 function deleteCalEvent(key, idx) {
@@ -2366,10 +2455,11 @@ function renderCalPage() {
   if (!S.cal_y) { S.cal_y = new Date().getFullYear(); S.cal_m = new Date().getMonth(); }
   if (!S.cal_events) S.cal_events = {};
 
-  // Set default date for new event input
-  const todayIso = new Date().toISOString().split('T')[0];
+  // Always set date input to today
+  const _tn = new Date();
+  const todayIso = _tn.getFullYear() + '-' + String(_tn.getMonth()+1).padStart(2,'0') + '-' + String(_tn.getDate()).padStart(2,'0');
   const newDateInp = document.getElementById('cal-new-date');
-  if (newDateInp && !newDateInp.value) newDateInp.value = todayIso;
+  if (newDateInp) newDateInp.value = todayIso;
 
   // Header label
   document.getElementById('cal-full-label').textContent = MONTHS[S.cal_m] + ' ' + S.cal_y;
@@ -2414,7 +2504,7 @@ function renderCalPage() {
 
     cell.addEventListener('mouseenter', () => { if (!isToday) cell.style.borderColor = 'var(--accent)44'; });
     cell.addEventListener('mouseleave', () => { cell.style.borderColor = isToday?'var(--accent)':hasOverdue?'var(--red)':'var(--border)'; });
-    cell.addEventListener('click', () => openCalModal(key, d));
+    cell.addEventListener('click', () => openDayPanel(key, d));
     grid.appendChild(cell);
   }
 
@@ -2427,95 +2517,108 @@ function renderCalPage() {
     cell.innerHTML = `<div style="font-size:11px;color:var(--muted);">${i}</div>`;
     grid.appendChild(cell);
   }
-
-  renderAgenda();
-  renderOverdue();
 }
 
-function setCalFilter(f, btn) {
-  calFilter = f;
-  document.querySelectorAll('#cal-filter-btns .btn').forEach(b => { b.style.borderColor='var(--border)'; b.style.color='var(--muted)'; });
-  btn.style.borderColor = 'var(--accent)'; btn.style.color = 'var(--accent)';
-  renderAgenda();
-}
+// ── DAY PANEL ──────────────────────────────────
+let _panelKey = null;
 
-function renderAgenda() {
-  const ct = document.getElementById('cal-agenda-list');
-  if (!ct) return;
+function openDayPanel(key, d) {
+  _panelKey = key;
+  const parts = key.split('-').map(Number);
+  const date = new Date(parts[0], parts[1]-1, parts[2]);
+  const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const today = new Date(); today.setHours(0,0,0,0);
-  const all = [];
-  Object.entries(S.cal_events || {}).forEach(([key, evts]) => {
-    const parts = key.split('-').map(Number);
-    const d = new Date(parts[0], parts[1]-1, parts[2]); d.setHours(0,0,0,0);
-    if (d >= today) {
-      evts.forEach(e => { if (calFilter === 'all' || e.type === calFilter) all.push({...e, key, d}); });
-    }
-  });
-  all.sort((a,b) => a.d - b.d);
+  date.setHours(0,0,0,0);
+  const diff = Math.round((date - today) / 86400000);
+  const diffLabel = diff === 0 ? '· TODAY' : diff === 1 ? '· TOMORROW' : diff < 0 ? `· ${Math.abs(diff)}d ago` : `· in ${diff}d`;
 
-  if (!all.length) {
-    ct.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:8px 0;">No upcoming events. Add one above.</div>';
+  document.getElementById('cal-panel-day').textContent = MONTHS[parts[1]-1] + ' ' + d + ', ' + parts[0];
+  document.getElementById('cal-panel-dayname').textContent = dayNames[date.getDay()] + ' ' + diffLabel;
+
+  // Pre-fill start date
+  const startIso = parts[0] + '-' + String(parts[1]).padStart(2,'0') + '-' + String(parts[2]).padStart(2,'0');
+  document.getElementById('cal-panel-start').value = startIso;
+  document.getElementById('cal-panel-end').value = '';
+  document.getElementById('cal-panel-title').value = '';
+
+  document.getElementById('cal-panel-empty').style.display = 'none';
+  document.getElementById('cal-panel-active').style.display = 'block';
+
+  renderDayPanelEvents();
+  setTimeout(() => document.getElementById('cal-panel-title').focus(), 50);
+}
+
+function renderDayPanelEvents() {
+  const ct = document.getElementById('cal-panel-events');
+  if (!ct || !_panelKey) return;
+  const evts = (S.cal_events || {})[_panelKey] || [];
+  if (!evts.length) {
+    ct.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:4px 0;">No events on this day.</div>';
     return;
   }
-
-  let lastMonth = '';
-  ct.innerHTML = '';
-  all.forEach(e => {
-    const diff = Math.round((e.d - today) / 86400000);
-    const diffLabel = diff === 0 ? 'TODAY' : diff === 1 ? 'TOMORROW' : 'in ' + diff + ' days';
-    const urgColor = diff === 0 ? 'var(--red)' : diff <= 3 ? 'var(--accent2)' : diff <= 7 ? 'var(--yellow)' : 'var(--muted)';
+  ct.innerHTML = evts.map((e, i) => {
     const col = EVT_COLORS[e.type] || 'var(--muted)';
-    const monthKey = e.d.getFullYear() + '-' + e.d.getMonth();
-    if (monthKey !== lastMonth) {
-      lastMonth = monthKey;
-      const hdr = document.createElement('div');
-      hdr.style.cssText = 'font-family:"Space Mono",monospace;font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin:12px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border);';
-      hdr.textContent = MONTHS[e.d.getMonth()] + ' ' + e.d.getFullYear();
-      ct.appendChild(hdr);
-    }
-    const div = document.createElement('div');
-    div.style.cssText = `display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid ${col};margin-bottom:5px;`;
-    div.innerHTML = `
-      <div style="text-align:center;min-width:32px;">
-        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:${col};line-height:1;">${e.d.getDate()}</div>
-        <div style="font-size:8px;color:var(--muted);">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][e.d.getDay()]}</div>
-      </div>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${EVT_ICONS[e.type]||'📌'} ${e.title}</div>
-        <div style="font-size:9px;color:${urgColor};margin-top:2px;">${diffLabel}</div>
-      </div>
-      <button class="del" onclick="deleteCalEventDirect('${e.key}','${e.id}')">×</button>
-    `;
-    ct.appendChild(div);
-  });
-}
-
-function renderOverdue() {
-  const ct = document.getElementById('cal-overdue-list');
-  const card = document.getElementById('cal-overdue-card');
-  if (!ct || !card) return;
-  const today = new Date(); today.setHours(0,0,0,0);
-  const overdue = [];
-  Object.entries(S.cal_events || {}).forEach(([key, evts]) => {
-    const parts = key.split('-').map(Number);
-    const d = new Date(parts[0], parts[1]-1, parts[2]); d.setHours(0,0,0,0);
-    if (d < today) {
-      evts.forEach(e => overdue.push({...e, key, d}));
-    }
-  });
-  overdue.sort((a,b) => b.d - a.d); // most recent first
-  if (!overdue.length) { card.style.display = 'none'; return; }
-  card.style.display = 'block';
-  ct.innerHTML = overdue.map((e,i) => {
-    const daysAgo = Math.round((today - e.d) / 86400000);
-    const col = EVT_COLORS[e.type] || 'var(--muted)';
-    return `<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);margin-bottom:5px;">
-      <span style="font-size:12px;flex:1;">${EVT_ICONS[e.type]||'📌'} ${e.title}</span>
-      <span style="font-size:9px;color:var(--red);">${daysAgo}d ago</span>
-      <button class="del" onclick="deleteCalEventDirect('${e.key}','${e.id}');renderOverdue();">×</button>
+    return `<div class="day-panel-evt" style="border-left:3px solid ${col};">
+      <span style="font-size:13px;">${EVT_ICONS[e.type]||'📌'}</span>
+      <span style="font-size:12px;flex:1;color:var(--text);">${e.title}</span>
+      <button class="del" onclick="deletePanelEvent('${_panelKey}',${i})" style="opacity:0.5;">×</button>
     </div>`;
   }).join('');
 }
+
+function deletePanelEvent(key, idx) {
+  if (!S.cal_events || !S.cal_events[key]) return;
+  S.cal_events[key].splice(idx, 1);
+  if (!S.cal_events[key].length) delete S.cal_events[key];
+  save();
+  renderDayPanelEvents();
+  renderCalPage();
+}
+
+function addFromPanel() {
+  const title = document.getElementById('cal-panel-title').value.trim();
+  const type = document.getElementById('cal-panel-type').value;
+  const startVal = document.getElementById('cal-panel-start').value;
+  const endVal = document.getElementById('cal-panel-end').value;
+  if (!title || !startVal) return;
+
+  if (!S.cal_events) S.cal_events = {};
+
+  const sp = startVal.split('-').map(Number);
+  const start = new Date(sp[0], sp[1]-1, sp[2]);
+  let end = new Date(start);
+  if (endVal) {
+    const ep = endVal.split('-').map(Number);
+    const ed = new Date(ep[0], ep[1]-1, ep[2]);
+    if (ed >= start) end = ed;
+  }
+  const hasRange = endVal && end > start;
+  const id = 'ev' + Date.now();
+
+  for (let cur = new Date(start); cur <= end; cur.setDate(cur.getDate() + 1)) {
+    const k = cur.getFullYear() + '-' + (cur.getMonth()+1) + '-' + cur.getDate();
+    if (!S.cal_events[k]) S.cal_events[k] = [];
+    const label = hasRange
+      ? title + (cur.getTime()===start.getTime() ? ' ▶' : cur.getTime()===end.getTime() ? ' ◀' : ' ─')
+      : title;
+    S.cal_events[k].push({id, title: label, type});
+  }
+
+  document.getElementById('cal-panel-title').value = '';
+  save();
+  renderDayPanelEvents();
+  renderCalPage();
+}
+
+function closeDayPanel() {
+  _panelKey = null;
+  document.getElementById('cal-panel-empty').style.display = 'block';
+  document.getElementById('cal-panel-active').style.display = 'none';
+}
+
+function setCalFilter(f, btn) {}
+function renderAgenda() {}
+function renderOverdue() {}
 
 function addCalEventDirect() {
   const title = document.getElementById('cal-new-title').value.trim();
@@ -2686,14 +2789,322 @@ updateOverall();
   if (m) m.addEventListener('click', function(e) { if (e.target === this) closeCalModal(); });
 })();
 setInterval(() => { renderHeader(); updateOverall(); }, 60000);
+
+// ══════════════════════════════════════════════
+// DAILY MOTIVATION — VAST LIBRARY, NO REPEATS, SAVEABLE
+// ══════════════════════════════════════════════
+const QUOTES = [
+  // FINANCE
+  {q:"The stock market is a device for transferring money from the impatient to the patient.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"Risk comes from not knowing what you're doing.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"In investing, what is comfortable is rarely profitable.",a:"Robert Arnott",cat:"FINANCE"},
+  {q:"Price is what you pay. Value is what you get.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"The biggest risk of all is not taking one.",a:"Mellody Hobson",cat:"FINANCE"},
+  {q:"Markets are never wrong — opinions often are.",a:"Jesse Livermore",cat:"FINANCE"},
+  {q:"It's not whether you're right or wrong, but how much money you make when you're right and how much you lose when you're wrong.",a:"George Soros",cat:"FINANCE"},
+  {q:"Compound interest is the eighth wonder of the world. He who understands it, earns it. He who doesn't, pays it.",a:"Albert Einstein",cat:"FINANCE"},
+  {q:"The four most dangerous words in investing are: 'This time it's different.'",a:"John Templeton",cat:"FINANCE"},
+  {q:"Wide diversification is only required when investors do not understand what they are doing.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"The goal of a successful trader is to make the best trades. Money is secondary.",a:"Alexander Elder",cat:"FINANCE"},
+  {q:"An investment in knowledge pays the best interest.",a:"Benjamin Graham",cat:"FINANCE"},
+  {q:"In the short run, the market is a voting machine. In the long run, it is a weighing machine.",a:"Benjamin Graham",cat:"FINANCE"},
+  {q:"The market is filled with individuals who know the price of everything but the value of nothing.",a:"Philip Fisher",cat:"FINANCE"},
+  {q:"Know what you own, and know why you own it.",a:"Peter Lynch",cat:"FINANCE"},
+  {q:"The time to buy is when there's blood in the streets.",a:"Baron Rothschild",cat:"FINANCE"},
+  {q:"Diversification is protection against ignorance. It makes little sense if you know what you are doing.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"Behind every stock is a company. Find out what it's doing.",a:"Peter Lynch",cat:"FINANCE"},
+  {q:"October: this is one of the particularly dangerous months to speculate in stocks. Others are July, January, September, April, November, May, March, June, December, August, and February.",a:"Mark Twain",cat:"FINANCE"},
+  {q:"The individual investor should act consistently as an investor and not as a speculator.",a:"Benjamin Graham",cat:"FINANCE"},
+  {q:"It's far better to buy a wonderful company at a fair price than a fair company at a wonderful price.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"Wall Street is the only place that people ride to in a Rolls Royce to get advice from those who take the subway.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"Financial peace isn't the acquisition of stuff. It's learning to live on less than you make.",a:"Dave Ramsey",cat:"FINANCE"},
+  {q:"I will tell you the secret to getting rich on Wall Street. You try to be greedy when others are fearful and fearful when others are greedy.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"The most contrarian thing of all is not to oppose the crowd but to think for yourself.",a:"Peter Thiel",cat:"FINANCE"},
+  {q:"Every portfolio benefits from bonds; they provide a cushion when the stock market hits a rough patch.",a:"Suze Orman",cat:"FINANCE"},
+  {q:"The secret of getting ahead is getting started.",a:"Mark Twain",cat:"FINANCE"},
+  {q:"How many millionaires do you know who have become wealthy by investing in savings accounts? I rest my case.",a:"Robert G. Allen",cat:"FINANCE"},
+  {q:"Money is a terrible master but an excellent servant.",a:"P.T. Barnum",cat:"FINANCE"},
+  {q:"Don't look for the needle in the haystack. Just buy the haystack.",a:"John Bogle",cat:"FINANCE"},
+  {q:"The best investment you can make is in yourself.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"Investing should be more like watching paint dry or watching grass grow. If you want excitement, take $800 and go to Las Vegas.",a:"Paul Samuelson",cat:"FINANCE"},
+  {q:"A penny saved is a penny earned.",a:"Benjamin Franklin",cat:"FINANCE"},
+  {q:"Financial fitness is not a pipe dream or a wish list. It's a reality if you're willing to pursue it and embrace it.",a:"Will Robinson",cat:"FINANCE"},
+  {q:"Never spend your money before you have earned it.",a:"Thomas Jefferson",cat:"FINANCE"},
+  {q:"Too many people spend money they haven't earned to buy things they don't want to impress people they don't like.",a:"Will Rogers",cat:"FINANCE"},
+  {q:"Wealth consists not in having great possessions, but in having few wants.",a:"Epictetus",cat:"FINANCE"},
+  {q:"You must gain control over your money or the lack of it will forever control you.",a:"Dave Ramsey",cat:"FINANCE"},
+  {q:"Do not save what is left after spending; instead spend what is left after saving.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"An investor without investment objectives is like a traveler without a destination.",a:"Ralph Seger",cat:"FINANCE"},
+  {q:"The real measure of your wealth is how much you'd be worth if you lost all your money.",a:"Unknown",cat:"FINANCE"},
+  {q:"Wealth is not about having a lot of money; it's about having a lot of options.",a:"Chris Rock",cat:"FINANCE"},
+  {q:"Money grows on the tree of persistence.",a:"Japanese Proverb",cat:"FINANCE"},
+  {q:"A budget is telling your money where to go instead of wondering where it went.",a:"Dave Ramsey",cat:"FINANCE"},
+  {q:"The philosophy of the rich and the poor is this: the rich invest their money and spend what is left. The poor spend their money and invest what is left.",a:"Robert Kiyosaki",cat:"FINANCE"},
+  {q:"The goal isn't more money. The goal is living life on your terms.",a:"Chris Brogan",cat:"FINANCE"},
+  {q:"It's not how much money you make, but how much money you keep, how hard it works for you, and how many generations you keep it for.",a:"Robert Kiyosaki",cat:"FINANCE"},
+  {q:"Opportunities come infrequently. When it rains gold, put out the bucket, not the thimble.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"I made my first investment at age eleven. I was wasting my life up until then.",a:"Warren Buffett",cat:"FINANCE"},
+  {q:"The stock market is designed to transfer money from the Active to the Patient.",a:"Warren Buffett",cat:"FINANCE"},
+  // GYM
+  {q:"Strength does not come from physical capacity. It comes from an indomitable will.",a:"Mahatma Gandhi",cat:"GYM"},
+  {q:"The pain you feel today will be the strength you feel tomorrow.",a:"Arnold Schwarzenegger",cat:"GYM"},
+  {q:"If it doesn't challenge you, it doesn't change you.",a:"Fred DeVito",cat:"GYM"},
+  {q:"The only bad workout is the one that didn't happen.",a:"Unknown",cat:"GYM"},
+  {q:"Your body can stand almost anything. It's your mind you have to convince.",a:"Andrew Murphy",cat:"GYM"},
+  {q:"Obsessed is a word the lazy use to describe the dedicated.",a:"Russell Warren",cat:"GYM"},
+  {q:"Champions aren't made in gyms. Champions are made from something they have deep inside them.",a:"Muhammad Ali",cat:"GYM"},
+  {q:"The last three or four reps is what makes the muscle grow. This area of pain divides a champion from someone who is not a champion.",a:"Arnold Schwarzenegger",cat:"GYM"},
+  {q:"Push harder than yesterday if you want a different tomorrow.",a:"Vincent Williams Sr.",cat:"GYM"},
+  {q:"No man has the right to be an amateur in the matter of physical training. It is a shame for a man to grow old without seeing the beauty and strength of which his body is capable.",a:"Socrates",cat:"GYM"},
+  {q:"We are what we repeatedly do. Excellence then is not an act but a habit.",a:"Aristotle",cat:"GYM"},
+  {q:"Take care of your body. It's the only place you have to live.",a:"Jim Rohn",cat:"GYM"},
+  {q:"To keep the body in good health is a duty, otherwise we shall not be able to keep our mind strong and clear.",a:"Buddha",cat:"GYM"},
+  {q:"Physical fitness is not only one of the most important keys to a healthy body, it is the basis of dynamic and creative intellectual activity.",a:"John F. Kennedy",cat:"GYM"},
+  {q:"The body achieves what the mind believes.",a:"Napoleon Hill",cat:"GYM"},
+  {q:"If you think lifting is dangerous, try being weak. Being weak is dangerous.",a:"Bret Contreras",cat:"GYM"},
+  {q:"Sweat is just fat crying.",a:"Unknown",cat:"GYM"},
+  {q:"The hardest lift of all is lifting your butt off the couch.",a:"Unknown",cat:"GYM"},
+  {q:"You don't have to be extreme, just consistent.",a:"Unknown",cat:"GYM"},
+  {q:"Success is walking from failure to failure with no loss of enthusiasm.",a:"Winston Churchill",cat:"GYM"},
+  {q:"When you feel like quitting, think about why you started.",a:"Unknown",cat:"GYM"},
+  {q:"Your health is an investment, not an expense.",a:"Unknown",cat:"GYM"},
+  {q:"Dead last finish is greater than did not finish, which trumps did not start.",a:"Unknown",cat:"GYM"},
+  {q:"Movement is a medicine for creating change in a person's physical, emotional, and mental states.",a:"Carol Welch",cat:"GYM"},
+  {q:"Exercise is king. Nutrition is queen. Put them together and you've got a kingdom.",a:"Jack LaLanne",cat:"GYM"},
+  {q:"Success usually comes to those who are too busy to be looking for it.",a:"Henry David Thoreau",cat:"GYM"},
+  {q:"If you want something you've never had, you must be willing to do something you've never done.",a:"Thomas Jefferson",cat:"GYM"},
+  {q:"A one-hour workout is 4% of your day. No excuses.",a:"Unknown",cat:"GYM"},
+  {q:"The difference between the impossible and the possible lies in a person's determination.",a:"Tommy Lasorda",cat:"GYM"},
+  {q:"Motivation is what gets you started. Habit is what keeps you going.",a:"Jim Ryun",cat:"GYM"},
+  {q:"You've got to get up every morning with determination if you're going to go to bed with satisfaction.",a:"George Lorimer",cat:"GYM"},
+  {q:"If it were easy, everyone would do it.",a:"Unknown",cat:"GYM"},
+  {q:"Pain is weakness leaving the body.",a:"US Marine Corps",cat:"GYM"},
+  {q:"Fitness is not about being better than someone else. It's about being better than you used to be.",a:"Unknown",cat:"GYM"},
+  {q:"The clock is ticking. Are you becoming the person you want to be?",a:"Greg Plitt",cat:"GYM"},
+  {q:"You have to think it before you can do it. The mind is what makes it all possible.",a:"Kai Greene",cat:"GYM"},
+  {q:"Discipline is doing what needs to be done, even when you don't want to do it.",a:"Unknown",cat:"GYM"},
+  {q:"Every champion was once a contender that refused to give up.",a:"Rocky Balboa",cat:"GYM"},
+  {q:"The human body is the best picture of the human soul.",a:"Tony Robbins",cat:"GYM"},
+  {q:"What seems impossible today will one day become your warm-up.",a:"Unknown",cat:"GYM"},
+  {q:"Nobody who ever gave their best regretted it.",a:"George Halas",cat:"GYM"},
+  {q:"You can have results or excuses. Not both.",a:"Arnold Schwarzenegger",cat:"GYM"},
+  {q:"The only way to define your limits is by going beyond them.",a:"Arthur Clarke",cat:"GYM"},
+  {q:"There are no shortcuts to any place worth going.",a:"Beverly Sills",cat:"GYM"},
+  {q:"Make the most of yourself by fanning the tiny, inner sparks of possibility into flames of achievement.",a:"Golda Meir",cat:"GYM"},
+  {q:"Strength does not come from winning. Your struggles develop your strengths.",a:"Arnold Schwarzenegger",cat:"GYM"},
+  {q:"To give anything less than your best is to sacrifice the gift.",a:"Steve Prefontaine",cat:"GYM"},
+  {q:"Once you are exercising regularly, the hardest thing is to stop it.",a:"Erin Gray",cat:"GYM"},
+  {q:"In training, you listen to your body. In competition, you tell your body to shut up.",a:"Rich Froning",cat:"GYM"},
+  {q:"Your biggest challenge isn't someone else. It's the ache in your lungs and the burning in your legs, and the voice inside you that yells 'I can't.'",a:"Unknown",cat:"GYM"},
+  // GRIND
+  {q:"Discipline is the bridge between goals and accomplishment.",a:"Jim Rohn",cat:"GRIND"},
+  {q:"You don't rise to the level of your goals. You fall to the level of your systems.",a:"James Clear",cat:"GRIND"},
+  {q:"Work hard in silence. Let success make the noise.",a:"Frank Ocean",cat:"GRIND"},
+  {q:"The difference between who you are and who you want to be is what you do.",a:"Unknown",cat:"GRIND"},
+  {q:"Don't watch the clock; do what it does. Keep going.",a:"Sam Levenson",cat:"GRIND"},
+  {q:"Opportunities don't happen. You create them.",a:"Chris Grosser",cat:"GRIND"},
+  {q:"The harder I work, the luckier I get.",a:"Gary Player",cat:"GRIND"},
+  {q:"Do something today that your future self will thank you for.",a:"Sean Patrick Flanery",cat:"GRIND"},
+  {q:"Fall seven times, stand up eight.",a:"Japanese Proverb",cat:"GRIND"},
+  {q:"It always seems impossible until it's done.",a:"Nelson Mandela",cat:"GRIND"},
+  {q:"Don't wish it were easier; wish you were better.",a:"Jim Rohn",cat:"GRIND"},
+  {q:"You miss 100% of the shots you don't take.",a:"Wayne Gretzky",cat:"GRIND"},
+  {q:"The secret of getting ahead is getting started.",a:"Mark Twain",cat:"GRIND"},
+  {q:"The way to get started is to quit talking and begin doing.",a:"Walt Disney",cat:"GRIND"},
+  {q:"Hard work beats talent when talent doesn't work hard.",a:"Tim Notke",cat:"GRIND"},
+  {q:"Success is the sum of small efforts repeated day in and day out.",a:"Robert Collier",cat:"GRIND"},
+  {q:"There are no limits to what you can accomplish, except the limits you place on your own thinking.",a:"Brian Tracy",cat:"GRIND"},
+  {q:"The expert in anything was once a beginner.",a:"Helen Hayes",cat:"GRIND"},
+  {q:"Great things never come from comfort zones.",a:"Unknown",cat:"GRIND"},
+  {q:"Don't stop when you're tired. Stop when you're done.",a:"Marilyn Monroe",cat:"GRIND"},
+  {q:"The future depends on what you do today.",a:"Mahatma Gandhi",cat:"GRIND"},
+  {q:"Believe you can and you're halfway there.",a:"Theodore Roosevelt",cat:"GRIND"},
+  {q:"Energy and persistence conquer all things.",a:"Benjamin Franklin",cat:"GRIND"},
+  {q:"You are never too old to set another goal or to dream a new dream.",a:"C.S. Lewis",cat:"GRIND"},
+  {q:"Either you run the day or the day runs you.",a:"Jim Rohn",cat:"GRIND"},
+  {q:"I am not a product of my circumstances. I am a product of my decisions.",a:"Stephen Covey",cat:"GRIND"},
+  {q:"The road to success and the road to failure are almost exactly the same.",a:"Colin R. Davis",cat:"GRIND"},
+  {q:"I find that the harder I work, the more luck I seem to have.",a:"Thomas Jefferson",cat:"GRIND"},
+  {q:"Success is not the key to happiness. Happiness is the key to success. If you love what you are doing, you will be successful.",a:"Albert Schweitzer",cat:"GRIND"},
+  {q:"You become what you think about most of the time.",a:"Brian Tracy",cat:"GRIND"},
+  {q:"Done is better than perfect.",a:"Sheryl Sandberg",cat:"GRIND"},
+  {q:"Excellence is not a destination; it is a continuous journey that never ends.",a:"Brian Tracy",cat:"GRIND"},
+  {q:"One day or day one. You decide.",a:"Unknown",cat:"GRIND"},
+  {q:"The only person you are destined to become is the person you decide to be.",a:"Ralph Waldo Emerson",cat:"GRIND"},
+  {q:"In the middle of every difficulty lies opportunity.",a:"Albert Einstein",cat:"GRIND"},
+  {q:"If you want to achieve greatness stop asking for permission.",a:"Unknown",cat:"GRIND"},
+  {q:"Things work out best for those who make the best of how things work out.",a:"John Wooden",cat:"GRIND"},
+  {q:"To live a creative life, we must lose our fear of being wrong.",a:"Joseph Chilton Pearce",cat:"GRIND"},
+  {q:"If you are not willing to risk the usual, you will have to settle for the ordinary.",a:"Jim Rohn",cat:"GRIND"},
+  {q:"All our dreams can come true, if we have the courage to pursue them.",a:"Walt Disney",cat:"GRIND"},
+  {q:"Good things come to people who wait, but better things come to those who go out and get them.",a:"Unknown",cat:"GRIND"},
+  {q:"If you do what you always did, you will get what you always got.",a:"Albert Einstein",cat:"GRIND"},
+  {q:"Success is liking yourself, liking what you do, and liking how you do it.",a:"Maya Angelou",cat:"GRIND"},
+  {q:"Knowing is not enough; we must apply. Wishing is not enough; we must do.",a:"Johann Wolfgang Von Goethe",cat:"GRIND"},
+  {q:"You may be disappointed if you fail, but you are doomed if you don't try.",a:"Beverly Sills",cat:"GRIND"},
+  {q:"If not us, who? If not now, when?",a:"John F. Kennedy",cat:"GRIND"},
+  {q:"We generate fears while we sit. We overcome them by action.",a:"Dr. Henry Link",cat:"GRIND"},
+  {q:"Whether you think you can or think you can't, you're right.",a:"Henry Ford",cat:"GRIND"},
+  {q:"Security is mostly a superstition. Life is either a daring adventure or nothing.",a:"Helen Keller",cat:"GRIND"},
+  {q:"The only way to do great work is to love what you do.",a:"Steve Jobs",cat:"GRIND"},
+  {q:"Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do, so throw off the bowlines, sail away from safe harbor, catch the trade winds in your sails. Explore, dream, discover.",a:"Mark Twain",cat:"GRIND"},
+];
+
+// Seeded shuffle so order is consistent per user but not predictable
+function seededShuffle(arr, seed) {
+  const a = arr.slice();
+  let s = seed;
+  for (let i = a.length - 1; i > 0; i--) {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    const j = Math.abs(s) % (i + 1);
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getMotivState() {
+  try { return JSON.parse(localStorage.getItem('motiv_state') || 'null'); } catch { return null; }
+}
+function saveMotivState(state) {
+  localStorage.setItem('motiv_state', JSON.stringify(state));
+}
+
+let _motivState = null;
+function getOrInitMotivState() {
+  if (_motivState) return _motivState;
+  let st = getMotivState();
+  if (!st) {
+    const seed = Date.now() & 0xfffffff;
+    st = { seed, order: seededShuffle(QUOTES.map((_,i)=>i), seed), index: 0, lastDate: '', saved: [] };
+    saveMotivState(st);
+  }
+  if (!st.saved) st.saved = [];
+  _motivState = st;
+  return st;
+}
+
+let _currentQuoteIdx = null;
+
+function renderMotivation() {
+  const el = document.getElementById('motivation-card');
+  if (!el) return;
+  const st = getOrInitMotivState();
+  const today = new Date().toISOString().split('T')[0];
+  if (st.lastDate !== today) {
+    st.lastDate = today;
+    if (st.index >= st.order.length) {
+      // exhausted all — reshuffle with new seed
+      st.seed = (st.seed * 6364136223846793005 + 1442695040888963407) & 0xffffffff;
+      st.order = seededShuffle(QUOTES.map((_,i)=>i), st.seed);
+      st.index = 0;
+    }
+    saveMotivState(st);
+  }
+  const qi = st.order[st.index % st.order.length];
+  _currentQuoteIdx = qi;
+  const q = QUOTES[qi];
+  document.getElementById('motiv-quote').textContent = '\u201c' + q.q + '\u201d';
+  document.getElementById('motiv-author').textContent = '\u2014 ' + q.a;
+  const catEl = document.getElementById('motiv-category');
+  catEl.textContent = q.cat;
+  const colors = {FINANCE:'var(--accent)',GYM:'var(--accent2)',GRIND:'var(--accent3)'};
+  const c = colors[q.cat] || 'var(--accent3)';
+  catEl.style.borderColor = c; catEl.style.color = c;
+  const seen = st.index + 1;
+  document.getElementById('motiv-seen-count').textContent = seen + ' / ' + QUOTES.length + ' SEEN';
+  // update save button heart state
+  const saveBtn = document.getElementById('motiv-save-btn');
+  const alreadySaved = st.saved.some(s => s.qi === qi);
+  saveBtn.textContent = alreadySaved ? '♥' : '♡';
+  saveBtn.style.color = alreadySaved ? 'var(--yellow)' : 'var(--muted)';
+  saveBtn.style.borderColor = alreadySaved ? 'var(--yellow)' : 'var(--muted2)';
+  saveBtn.onmouseover = alreadySaved ? null : function(){ this.style.borderColor='var(--yellow)';this.style.color='var(--yellow)'; };
+  saveBtn.onmouseout = alreadySaved ? null : function(){ this.style.borderColor='var(--muted2)';this.style.color='var(--muted)'; };
+}
+
+function saveMotivQuote() {
+  const st = getOrInitMotivState();
+  const qi = _currentQuoteIdx;
+  if (qi === null) return;
+  const already = st.saved.findIndex(s => s.qi === qi);
+  if (already >= 0) {
+    st.saved.splice(already, 1);
+  } else {
+    st.saved.push({ qi, date: new Date().toISOString().split('T')[0] });
+  }
+  saveMotivState(st);
+  renderMotivation();
+  renderSavedQuotes();
+}
+
+function toggleSavedQuotes() {
+  const vault = document.getElementById('motiv-vault');
+  const main = document.getElementById('motiv-main');
+  const btn = document.getElementById('motiv-vault-btn');
+  const showing = vault.style.display !== 'none';
+  vault.style.display = showing ? 'none' : 'block';
+  main.style.display = showing ? 'block' : 'none';
+  btn.textContent = showing ? 'VAULT' : 'BACK';
+  if (!showing) renderSavedQuotes();
+}
+
+function renderSavedQuotes() {
+  const st = getOrInitMotivState();
+  const list = document.getElementById('motiv-saved-list');
+  const empty = document.getElementById('motiv-empty');
+  if (!st.saved.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  const colors = {FINANCE:'var(--accent)',GYM:'var(--accent2)',GRIND:'var(--accent3)'};
+  list.innerHTML = st.saved.slice().reverse().map(s => {
+    const q = QUOTES[s.qi];
+    const c = colors[q.cat] || 'var(--accent3)';
+    return `<div style="background:var(--surface);border:1px solid var(--border);padding:10px;position:relative;">
+      <div style="font-size:9px;color:${c};letter-spacing:1px;margin-bottom:4px;">${q.cat} · ${s.date}</div>
+      <div style="font-size:11px;color:var(--text);line-height:1.5;margin-bottom:4px;">\u201c${q.q}\u201d</div>
+      <div style="font-size:9px;color:var(--muted);">\u2014 ${q.a}</div>
+      <button onclick="removeSavedQuote(${s.qi})" style="position:absolute;top:6px;right:6px;background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted)'">×</button>
+    </div>`;
+  }).join('');
+}
+
+function removeSavedQuote(qi) {
+  const st = getOrInitMotivState();
+  st.saved = st.saved.filter(s => s.qi !== qi);
+  saveMotivState(st);
+  if (_currentQuoteIdx === qi) renderMotivation();
+  renderSavedQuotes();
+}
+
+renderMotivation();
 </script>
 <!-- CALENDAR EVENT MODAL -->
-<div id="cal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:var(--card);border:1px solid var(--accent);padding:24px;max-width:360px;width:90%;position:relative;">
-    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:16px;" id="cal-modal-date"></div>
-    <div id="cal-modal-events" style="margin-bottom:16px;display:flex;flex-direction:column;gap:6px;"></div>
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+<div id="cal-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--card);border:1px solid var(--accent);padding:24px;max-width:400px;width:90%;position:relative;">
+    <button onclick="closeCalModal()" style="position:absolute;top:10px;right:12px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">×</button>
+    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:12px;" id="cal-modal-date"></div>
+    <div id="cal-modal-events" style="margin-bottom:14px;display:flex;flex-direction:column;gap:6px;"></div>
+
+    <!-- Add form -->
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
       <input class="inp" id="cal-evt-title" placeholder="Event / deadline / task..." onkeydown="if(event.key==='Enter')saveCalEvent()">
+
+      <!-- Date row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div>
+          <div style="font-size:8px;color:var(--muted);letter-spacing:1px;margin-bottom:3px;">START DATE</div>
+          <input class="inp" id="cal-evt-start" type="date" style="font-size:11px;">
+        </div>
+        <div>
+          <div style="font-size:8px;color:var(--muted);letter-spacing:1px;margin-bottom:3px;">END DATE <span style="color:var(--muted2);">(optional)</span></div>
+          <input class="inp" id="cal-evt-end" type="date" style="font-size:11px;">
+        </div>
+      </div>
+
+      <!-- Type + Add -->
       <div style="display:flex;gap:6px;">
         <select class="inp" id="cal-evt-type" style="flex:1;">
           <option value="deadline">📅 Deadline</option>
@@ -2703,7 +3114,7 @@ setInterval(() => { renderHeader(); updateOverall(); }, 60000);
           <option value="goal">🎯 Goal</option>
           <option value="other">📌 Other</option>
         </select>
-        <button class="btn primary" onclick="saveCalEvent()">Save</button>
+        <button class="btn primary" onclick="saveCalEvent()" style="white-space:nowrap;">+ Add</button>
       </div>
     </div>
     <button class="btn" onclick="closeCalModal()" style="width:100%;">Close</button>
@@ -2713,50 +3124,20 @@ setInterval(() => { renderHeader(); updateOverall(); }, 60000);
 <!-- SYNC MODAL -->
 <div id="sync-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px;">
   <div style="background:var(--card);border:1px solid var(--accent);padding:28px;max-width:540px;width:100%;margin:40px auto;position:relative;">
-    <button onclick="document.getElementById('sync-modal').style.display='none'" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">×</button>
-    <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:4px;">CROSS-DEVICE SYNC</div>
-    <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:16px;">Sync to all devices</div>
+    <button onclick="document.getElementById(&#39;sync-modal&#39;).style.display=&#39;none&#39;" style="position:absolute;top:12px;right:12px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;">×</button>
+    <div style="font-family:&#39;Space Mono&#39;,monospace;font-size:10px;color:var(--accent);letter-spacing:3px;margin-bottom:4px;">CROSS-DEVICE SYNC</div>
+    <div style="font-family:&#39;Syne&#39;,sans-serif;font-size:22px;font-weight:800;margin-bottom:16px;">Sync to all devices</div>
 
-    <div id="sync-status-box" style="padding:10px 14px;background:var(--surface);border:1px solid var(--border);margin-bottom:16px;font-size:12px;color:var(--muted);">
-      Status: <span id="sync-status-text">Not configured</span>
-    </div>
-
-    <div style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:20px;">
-      To sync across <b style="color:var(--text);">Windows + Android + any browser</b>, connect a free Supabase database.<br><br>
-      <b style="color:var(--accent);">Setup (5 mins, free forever):</b><br>
-      1. Go to <a href="https://supabase.com" target="_blank" style="color:var(--accent3);">supabase.com</a> → Sign up free<br>
-      2. New Project → name it <code style="color:var(--accent);">quantos</code> → set a password<br>
-      3. Wait ~2 mins for it to spin up<br>
-      4. Go to <b>SQL Editor</b> → run this query:<br>
-      <div style="background:var(--bg);border:1px solid var(--border);padding:10px;margin:8px 0;font-family:'Space Mono',monospace;font-size:10px;color:var(--green);">
-        CREATE TABLE sync_data (<br>
-        &nbsp;&nbsp;id TEXT PRIMARY KEY,<br>
-        &nbsp;&nbsp;data JSONB,<br>
-        &nbsp;&nbsp;updated_at TIMESTAMPTZ DEFAULT NOW()<br>
-        );
-      </div>
-      5. Go to <b>Project Settings → API</b><br>
-      6. Go to <b style="color:var(--accent);">SQL Editor</b> and run:<br>
-      <code style="background:var(--surface);padding:4px 8px;font-size:10px;display:block;margin:6px 0;color:var(--accent3);">create table if not exists sync_data (id text primary key, data jsonb, updated_at timestamp default now()); insert into sync_data (id, data) values ('quantos_main', '{}') on conflict do nothing;</code>
-      7. Copy your <b style="color:var(--accent);">Project URL</b> and <b style="color:var(--accent);">anon public key</b><br>
-      7. Paste them below and hit Connect
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
-      <input class="inp" id="sb-url" placeholder="https://xxxx.supabase.co" style="font-size:11px;">
-      <input class="inp" id="sb-key" placeholder="eyJhbGci... (anon public key)" style="font-size:11px;">
-      <input class="inp" id="sb-device" placeholder="Device name (e.g. Laptop, Phone)" style="font-size:11px;">
-    </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn primary" onclick="connectSupabase()" style="flex:1;">Connect & Sync</button>
-      <button class="btn primary" onclick="pushToSupabase().then(()=>showSyncBadge('✓ Pushed to cloud'))" style="flex:1;">⬆ Push</button>
-      <button class="btn" onclick="pullFromSupabase().then(()=>showSyncBadge('✓ Pulled from cloud'))" style="flex:1;">⬇ Pull</button>
+      <button class="btn primary" onclick="pushToSupabase().then(()=&gt;showSyncBadge(&#39;✓ Pushed to cloud&#39;))" style="flex:1;">⬆ Push</button>
+      <button class="btn" onclick="pullFromSupabase().then(()=&gt;showSyncBadge(&#39;✓ Pulled from cloud&#39;))" style="flex:1;">⬇ Pull</button>
       <button class="btn" onclick="exportLocal()" style="flex:1;">💾 Backup</button>
       <label class="btn" style="flex:1;cursor:pointer;text-align:center;">📂 Restore<input type="file" accept=".json" onchange="importLocal(event)" style="display:none;"></label>
     </div>
-    <div id="sync-log" style="margin-top:12px;font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;min-height:20px;"></div>
+    <div id="sync-log" style="margin-top:12px;font-size:10px;color:var(--muted);font-family:&#39;Space Mono&#39;,monospace;min-height:20px;"></div>
   </div>
 </div>
 
-</body>
-</html>
+
+
+</body></html>
